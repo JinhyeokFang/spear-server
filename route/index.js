@@ -1,9 +1,8 @@
-const socketio = require('socket.io')
-
 const connectionController = require('../controller/connectionController')
 const authController = require('../controller/authController')
+const inGameController = require('../controller/inGameController')
 
-module.exports = io => {
+exports.start = io => {
     io.set('origins', '*:*')
     io.on('connection', socket => {
         connectionController.connect()
@@ -12,4 +11,11 @@ module.exports = io => {
         socket.on("disconnect", data => connectionController.disconnect())
     })
     setInterval(() => {io.emit("message", {"data": "message data"});}, 600)
+}
+
+exports.registerCallback = (socket, res) => {
+    socket.emit("registerCallback", res)
+}
+exports.loginCallback = (socket, res) => {
+    socket.emit("loginCallback", res)
 }

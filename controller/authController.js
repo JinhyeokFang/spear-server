@@ -1,13 +1,14 @@
 const db = require('../db')
+const router = require('../route')
 
 exports.login = (socket, data) => {
     db.login(data, res => {
-        socket.emit("loginCallback", res) //najung e go cheo ya jing
+        router.loginCallback(data, res)
     })
 }
 
 exports.register = (socket, data) => {
     db.register(data, res => {
-        socket.emit("registerCallback", res) //2geo do najung e
+        router.registerCallback(data, res)
     })
 }

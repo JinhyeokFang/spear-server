@@ -8,10 +8,9 @@ const config = require('./config')
 
 const app = express()
 const server = app.listen(config.port)
-const game = {user: []} //na jung e go chill geo ya
 
 mongoose.connect(`mongodb://localhost/${config.db.name}`, {
 	useNewUrlParser: true   
 });
 
-router(socketio.listen(server))
+setTimeout(() => router.start(socketio.listen(server)), 1000)
