@@ -7,11 +7,8 @@ module.exports = (function() {
             getUserList() {
                 return _connectedUserList
             },
-            createUser(userInfo) {
-                if (typeof userInfo == "object")
-                    _connectedUserList.push(userInfo)
-                else
-                    return { err: "given userInfo is not object" }
+            createUser(id) {
+                _connectedUserList.push({id})
             },
             removeUserBySocketId(id) {
                 let index = _connectedUserList.findIndex(e => e.id == id)
@@ -33,6 +30,22 @@ module.exports = (function() {
                     return user
                 else
                     return { err: "userNotFound" }    
+            },
+            loginUserBySocketId(id, username) {
+                this.updateUserBySocketId(id, { id, username })
+            },
+            enterGameRoomBySocketId(id, roomid) {
+                let newData = this.getUserBySocketId(id)
+                if (newData.username == undefined)
+                    return { err: "can't enter game room without login" }
+                newData.roomid = roomid
+                this.updateUserBySocketId(id, newData)
+                return {}
+            },
+            quitGameRoomBySocketId(id) {
+                let newData = this.getUserBySocketId(id)
+                newData.roomid = undefined
+                this.updateUserBySocketId(id, newData)
             }
         }
     }

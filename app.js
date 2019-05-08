@@ -7,10 +7,13 @@ const router = require('./route')
 const config = require('./config')
 
 const app = express()
+
+app.use(logger('dev'))
+
 const server = app.listen(config.port)
 
 mongoose.connect(`mongodb://localhost/${config.db.name}`, {
-	useNewUrlParser: true   
+	useNewUrlParser: true
 });
 
 setTimeout(() => router.start(socketio.listen(server)), 1000)

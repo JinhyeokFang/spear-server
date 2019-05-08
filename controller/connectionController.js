@@ -1,9 +1,9 @@
-exports.connect = () => {
-    // game.user.push({id: socket.id})
+const connectedUsersInfo = require('../model/connectedUsersInfoInstanceModel').getInstance()
+
+exports.connect = id => {
+    connectedUsersInfo.createUser(id)
 }
 
-exports.disconnect = () => {
-    // let userIndex = game.user.findIndex(element => element.id == socket.id);
-    // if (userIndex >= 0)
-        // game.user.splice(userIndex, 1)
+exports.disconnect = id => {
+    connectedUsersInfo.removeUserBySocketId(id)
 }

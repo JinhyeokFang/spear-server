@@ -5,12 +5,17 @@ const inGameController = require('../controller/inGameController')
 exports.start = io => {
     io.set('origins', '*:*')
     io.on('connection', socket => {
-        connectionController.connect()
+        connectionController.connect(socket.id)
         socket.on("login", data => authController.login(socket, data))
         socket.on("register", data => authController.register(socket, data))
-        socket.on("disconnect", data => connectionController.disconnect())
+        socket.on("disconnect", data => connectionController.disconnect(socket.id))
+        socket.on("enter", data => inGameController.enter(socket.id, parseInt(data.roomid)))
+        socket.on("quit", data => inGameController.quit(socket.id))
     })
-    setInterval(() => {io.emit("message", {"data": "message data"});}, 600)
+    setInterval(() => {
+        io.emit("message", {"data": "message data"})
+        console.log(require('../model/connectedUsersInfoInstanceModel').getInstance().getUserList())
+    }, 600)
 }
 
 exports.registerCallback = (socket, res) => {
