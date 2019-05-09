@@ -6,6 +6,10 @@ exports.enter = (id, roomid) => {
         throw new Error(err)
 }
 
-exports.quit = (id) => {
+exports.quit = id => {
     connectedUsersInfo.quitGameRoomBySocketId(id)
+}
+
+exports.move = (x, y, id) => {
+    connectedUsersInfo.moveUserPositionBySocketId(x, y, id)
 }

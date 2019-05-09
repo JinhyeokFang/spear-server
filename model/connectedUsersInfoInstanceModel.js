@@ -1,6 +1,7 @@
 module.exports = (function() {
     var instance = null
     var _connectedUserList = []
+    var _roomList = []
     
     function init() {
         return {
@@ -39,6 +40,9 @@ module.exports = (function() {
                 if (newData.username == undefined)
                     return { err: "can't enter game room without login" }
                 newData.roomid = roomid
+                newData.x = 0
+                newData.y = 0
+                newData.direction = 0
                 this.updateUserBySocketId(id, newData)
                 return {}
             },
@@ -46,6 +50,28 @@ module.exports = (function() {
                 let newData = this.getUserBySocketId(id)
                 newData.roomid = undefined
                 this.updateUserBySocketId(id, newData)
+            },
+            moveUserPositionBySocketId(x, y, id) {
+                let newData = this.getUserBySocketId(id)
+                newData.x = x
+                newData.y = y
+                this.updateUserBySocketId(id, newData)
+            },
+            createRoom() {
+                _roomList.push({})
+                return _roomList.length
+            },
+            removeRoomByPop() {
+                if (_roomList.length > 0)
+                    _roomList.pop()
+            },
+            updateRoom(roomid, update) {
+                if (_roomList.length > roomid)
+                    _roomList[roomid] = update
+            },
+            getRoom(roomid) {
+                if (_roomList.length > roomid)
+                    return _roomList[roomid]
             }
         }
     }
