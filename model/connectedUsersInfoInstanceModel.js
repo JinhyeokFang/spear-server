@@ -8,6 +8,9 @@ module.exports = (function() {
             getUserList() {
                 return _connectedUserList
             },
+            getRoomList() {
+                return _roomList
+            },
             createUser(id) {
                 _connectedUserList.push({id})
             },
@@ -43,6 +46,7 @@ module.exports = (function() {
                 newData.x = 0
                 newData.y = 0
                 newData.direction = 0
+                newData.health = 0
                 this.updateUserBySocketId(id, newData)
                 return {}
             },
@@ -58,7 +62,9 @@ module.exports = (function() {
                 this.updateUserBySocketId(id, newData)
             },
             createRoom() {
-                _roomList.push({})
+                _roomList.push({
+                    
+                })
                 return _roomList.length
             },
             removeRoomByPop() {
