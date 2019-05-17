@@ -4,11 +4,17 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app"
+    "start": "npm run lint && clear; node app",
+    "lint": "./node_modules/.bin/eslint . --fix"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "morgan": "^1.9.1"
+    "express": "^4.16.4",
+    "morgan": "^1.9.1",
+    "socketio": "^1.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0"
   }
 }

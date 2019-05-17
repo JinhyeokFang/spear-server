@@ -1,4 +1,4 @@
-const userModel = require('../model/userMogooseModel')
+const userModel = require("../model/userMogooseModel")
 
 exports.login = (data, callback) => {
     userModel.findOne(data, (err, res) => {
@@ -18,7 +18,10 @@ exports.register = (data, callback) => {
             callback({ message: "register failed", err })
         } else if (res == null) {
             new userModel({username: data.username, password: data.password, skillArray: []}).save(err => {
-                callback({ message: "register complete" })
+                if (err)
+                    callback({ message: "register failed", err })
+                else
+                    callback({ message: "register complete" })
             })
         } else {
             callback({ message: "register failed", err })

@@ -1,21 +1,21 @@
-const connectionController = require('../controller/connectionController')
-const authController = require('../controller/authController')
-const inGameController = require('../controller/inGameController')
+const connectionController = require("../controller/connectionController")
+const authController = require("../controller/authController")
+const inGameController = require("../controller/inGameController")
 
 exports.start = io => {
-    io.set('origins', '*:*')
-    io.on('connection', socket => {
+    io.set("origins", "*:*")
+    io.on("connection", socket => {
         connectionController.connect(socket.id)
         socket.on("login", data => authController.login(socket, data))
         socket.on("register", data => authController.register(socket, data))
-        socket.on("disconnect", data => connectionController.disconnect(socket.id))
+        socket.on("disconnect", () => connectionController.disconnect(socket.id))
         socket.on("enter", data => inGameController.enter(socket.id, parseInt(data.roomid))),
-        socket.on("quit", data => inGameController.quit(socket.id))
+        socket.on("quit", () => inGameController.quit(socket.id))
         socket.on("move", data => inGameController.move(data.x, data.y, socket.id))
     })
     setInterval(() => {
         io.emit("message", {"data": "message data"})
-        console.log(require('../model/connectedUsersInfoInstanceModel').getInstance().getUserList())
+        console.log(require("../model/connectedUsersInfoInstanceModel").getInstance().userList)
     }, 600)
 }
 

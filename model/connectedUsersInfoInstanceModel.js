@@ -5,10 +5,10 @@ module.exports = (function() {
     
     function init() {
         return {
-            getUserList() {
+            get userList() {
                 return _connectedUserList
             },
-            getRoomList() {
+            get roomList() {
                 return _roomList
             },
             createUser(id) {
@@ -28,7 +28,7 @@ module.exports = (function() {
                 else
                     return { err: "userNotFound" }    
             },
-            getUserBySocketId(id, update) {
+            getUserBySocketId(id) {
                 let user = _connectedUserList.find(e => e.id == id)
                 if (user != null)                
                     return user
@@ -48,7 +48,7 @@ module.exports = (function() {
                 newData.direction = 0
                 newData.health = 0
                 this.updateUserBySocketId(id, newData)
-                return {}
+                return { err: null }
             },
             quitGameRoomBySocketId(id) {
                 let newData = this.getUserBySocketId(id)

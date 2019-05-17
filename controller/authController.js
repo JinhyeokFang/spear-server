@@ -1,6 +1,6 @@
-const db = require('../db')
-const connectedUsersInfo = require('../model/connectedUsersInfoInstanceModel').getInstance()
-const router = require('../route')
+const db = require("../db")
+const connectedUsersInfo = require("../model/connectedUsersInfoInstanceModel").getInstance()
+const router = require("../route")
 
 exports.login = (socket, data) => {
     db.login(data, res => {
