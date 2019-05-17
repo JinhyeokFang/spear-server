@@ -13,7 +13,7 @@ module.exports = {
         "ecmaVersion": 2018
     },
     "rules": {
-        "semi": ["error", "never"],
+        "semi": ["error", "always"],
         "quotes": ["error", "double"],
         "no-console": "off",
         "comma-dangle": ["error", "never"]

@@ -4,8 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "npm run lint && clear; node app",
-    "lint": "./node_modules/.bin/eslint . --fix"
+    "start": "npm run lint && npm run startdb && clear; node app",
+    "lint": "./node_modules/.bin/eslint . --fix",
+    "startdb": "mongod &"
   },
   "author": "",
   "license": "ISC",

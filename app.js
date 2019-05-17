@@ -1,19 +1,19 @@
-const express = require("express")
-const logger = require("morgan")
-const mongoose = require("mongoose")
-const socketio = require("socket.io")
+const express = require("express");
+const logger = require("morgan");
+const mongoose = require("mongoose");
+const socketio = require("socket.io");
 
-const router = require("./route")
-const config = require("./config")
+const router = require("./route");
+const config = require("./config");
 
-const app = express()
+const app = express();
 
-app.use(logger("dev"))
+app.use(logger("dev"));
 
-const server = app.listen(config.port)
+const server = app.listen(config.port);
 
 mongoose.connect(`mongodb://localhost/${config.db.name}`, {
 	useNewUrlParser: true
-})
+});
 
-setTimeout(() => router.start(socketio.listen(server)), 1000)
+setTimeout(() => router.start(socketio.listen(server)), 1000);

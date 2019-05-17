@@ -3,4 +3,4 @@ module.exports =  {
 	db: {
 		name: "game"
 	}
-}
+};
