@@ -6,7 +6,8 @@
   "scripts": {
     "start": "npm run lint && npm run startdb && clear; node app",
     "lint": "./node_modules/.bin/eslint . --fix",
-    "startdb": "mongod &"
+    "startdb": "mongod &",
+    "reinstall": "cd .. && git clone https://github.com/JinhyeokFang/spear-server && cd spear-server && npm install"
   },
   "author": "",
   "license": "ISC",

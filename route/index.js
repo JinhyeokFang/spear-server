@@ -6,28 +6,37 @@ function receiveMessage (socket) {
     socket.on("disconnect", () => connectionController.disconnect(socket.id));
 
     socket.on("login", data => authController.login(socket, data, res => {
-        socket.emit("loginCallback", res);
+        sendMessageBySocket(socket, "loginCallback", res);
     }));
     socket.on("register", data => authController.register(socket, data, res => {
-        socket.emit("registerCallback", res);
+        sendMessageBySocket(socket, "registerCallback", res);
     }));
 
     socket.on("enter", data => inGameController.enter(socket.id, parseInt(data.roomid), err => {
         if(err != null)
-            socket.emit("enterCallback", { message: "enter failed", err});
+            sendMessageBySocket(socket, "enterCallback", { message: "enter failed", err});
         else
-            socket.emit("enterCallback", { meesage: "enter complete"});
+            sendMessageBySocket(socket, "enterCallback", { meesage: "enter complete"});
     })),
     socket.on("quit", () => inGameController.quit(socket.id));
     
     socket.on("move", data => inGameController.move(data.x, data.y, socket.id));
+    socket.on("skill", data => inGameController.skill(data.number, socket.id));
 }
 
 function sendDataMessage (io, time) {
     setInterval(() => {
         for (var user of connectionController.getUsers()) 
-            io.to(user.id).emit("message", user);
+            sendMessageByIO(io, user.id, "message", user);
     }, time);
+}
+
+function sendMessageByIO (io, id, ...params) {
+    io.to(id).emit(...params);
+}
+
+function sendMessageBySocket (socket, ...params) {
+    socket.emit(...params);
 }
 
 exports.start = io => {

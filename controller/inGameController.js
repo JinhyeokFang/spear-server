@@ -13,3 +13,7 @@ exports.quit = (id, callback) => {
 exports.move = (x, y, id) => {
     connectedUsersInfo.moveUserPositionBySocketId(x, y, id);
 };
+
+exports.skill = (number, id) => {
+    console.info(number, id);
+};
