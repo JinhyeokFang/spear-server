@@ -6,10 +6,10 @@ function receiveMessage (socket) {
     socket.on("disconnect", () => connectionController.disconnect(socket.id));
 
     socket.on("login", data => authController.login(socket, data, res => {
-        socket.emit("registerCallback", res);
+        socket.emit("loginCallback", res);
     }));
     socket.on("register", data => authController.register(socket, data, res => {
-        socket.emit("loginCallback", res);
+        socket.emit("registerCallback", res);
     }));
 
     socket.on("enter", data => inGameController.enter(socket.id, parseInt(data.roomid), err => {
