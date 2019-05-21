@@ -1,13 +1,13 @@
 const connectedUsersInfo = require("../model/connectedUsersInfoInstanceModel").getInstance();
 
-exports.enter = (id, roomid) => {
+exports.enter = (id, roomid, callback) => {
     let result = connectedUsersInfo.enterGameRoomBySocketId(id, roomid);
-    if(result.err != null)
-        throw new Error(result.err);
+    callback(result.err);
 };
 
-exports.quit = id => {
+exports.quit = (id, callback) => {
     connectedUsersInfo.quitGameRoomBySocketId(id);
+    callback();
 };
 
 exports.move = (x, y, id) => {

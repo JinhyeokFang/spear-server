@@ -63,7 +63,7 @@ module.exports = (function() {
             },
             createRoom() {
                 _roomList.push({
-                    
+                    inGame: false
                 });
                 return _roomList.length;
             },
@@ -78,6 +78,10 @@ module.exports = (function() {
             getRoom(roomid) {
                 if (_roomList.length > roomid)
                     return _roomList[roomid];
+            },
+            getUsersByRoomid(roomid) {
+                if (_roomList.length > roomid)
+                    return _connectedUserList.filter(element => element.roomid == roomid);
             }
         };
     }

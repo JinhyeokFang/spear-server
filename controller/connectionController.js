@@ -7,3 +7,5 @@ exports.connect = id => {
 exports.disconnect = id => {
     connectedUsersInfo.removeUserBySocketId(id);
 };
+
+exports.getUsers = () => connectedUsersInfo.userList;

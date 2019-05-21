@@ -8,7 +8,7 @@ const config = require("./config");
 
 const app = express();
 
-app.use(logger("dev"));
+app.use(logger(config.environment));
 
 const server = app.listen(config.port);
 
