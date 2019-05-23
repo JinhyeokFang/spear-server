@@ -32,7 +32,7 @@ function receiveMessage (socket) {
 function sendDataMessage (io, time) {
     setInterval(() => {
         for (var user of connectionController.getUsers()) 
-            sendMessageByIO(io, user.id, "message", {user});
+            sendMessageByIO(io, user.id, "message", {user, userList: connectionController.getUsers()});
     }, time);
 }
 
@@ -50,5 +50,5 @@ module.exports = io => {
         connectionController.connect(socket.id);
         receiveMessage(socket);
     });
-    sendDataMessage(io, 10);
+    sendDataMessage(io, 100);
 };

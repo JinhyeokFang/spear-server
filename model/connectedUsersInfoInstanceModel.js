@@ -29,7 +29,6 @@ module.exports = (function() {
                     return { err: "userNotFound" };    
             },
             loginUserBySocketId(id, username) {
-                console.log(id, username)
                 _updateUserBySocketId(id, { id, username });
             },
             enterGameRoomBySocketId(id) {
@@ -77,8 +76,10 @@ module.exports = (function() {
     }
 
     function _addUserIntoRoom() {
-        if (_getUsersByRoomid(_roomList.length - 1) == 1 || _roomList.length == 0) {
+        if (_getUsersByRoomid(_roomList.length - 1).length == 2 || _roomList.length == 0) {
             _createRoom();
+            if (_roomList.length - 2 >= 0 && _roomList[_roomList.length - 2].using && !_roomList[_roomList.length - 2].inGame)
+                _roomList[_roomList.length - 2].inGame = true;
         }
         return _roomList.length - 1;
     }
