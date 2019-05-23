@@ -1,3 +1,4 @@
+const connectedUsersInfo = require("../model/connectedUsersInfoInstanceModel").getInstance();
 const connectionController = require("../controller/connectionController");
 const authController = require("../controller/authController");
 const inGameController = require("../controller/inGameController");
@@ -21,13 +22,18 @@ function receiveMessage (socket) {
     socket.on("quit", () => inGameController.quit(socket.id));
     
     socket.on("move", data => inGameController.move(data.x, data.y, socket.id));
-    socket.on("skill", data => inGameController.skill(data.number, socket.id));
+    socket.on("skill", data => inGameController.skill(data.number, socket.id, result => {
+        console.log(result);
+    }));
+    // socket.on("kill", data => inGameController.kill(data.target, socket.id, res => {
+
+    // }))
 }
 
 function sendDataMessage (io, time) {
     setInterval(() => {
         for (var user of connectionController.getUsers()) 
-            sendMessageByIO(io, user.id, "message", user);
+            sendMessageByIO(io, user.id, "message", {user, room: connectedUsersInfo.});
     }, time);
 }
 
@@ -39,7 +45,7 @@ function sendMessageBySocket (socket, ...params) {
     socket.emit(...params);
 }
 
-exports.start = io => {
+module.exports = io => {
     io.set("origins", "*:*");
     io.on("connection", socket => {
         connectionController.connect(socket.id);

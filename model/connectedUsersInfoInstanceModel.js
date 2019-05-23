@@ -47,6 +47,8 @@ module.exports = (function() {
                 newData.y = 0;
                 newData.direction = 0;
                 newData.health = 0;
+                newData.aniStatus = 0;
+                newData.horseBonePositions = [];
                 this.updateUserBySocketId(id, newData);
                 return { err: null };
             },
@@ -63,7 +65,9 @@ module.exports = (function() {
             },
             createRoom() {
                 _roomList.push({
-                    inGame: false
+                    inGame: false,
+                    score: [],
+                    time: 300
                 });
                 return _roomList.length;
             },

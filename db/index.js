@@ -1,4 +1,11 @@
+const mongoose = require("mongoose");
 const userModel = require("../model/userMogooseModel");
+
+exports.initialize = dbName => {
+    mongoose.connect(`mongodb://localhost/${dbName}`, {
+        useNewUrlParser: true
+    });
+};
 
 exports.login = (data, callback) => {
     userModel.findOne(data, (err, res) => {
@@ -17,7 +24,7 @@ exports.register = (data, callback) => {
         if (err) {
             callback({ message: "register failed", err });
         } else if (res == null) {
-            new userModel({username: data.username, password: data.password, skillArray: []}).save(err => {
+            new userModel({username: data.username, password: data.password, nickname: data.nickname, skill1Array: [], skill2Array: []}).save(err => {
                 if (err)
                     callback({ message: "register failed", err });
                 else
