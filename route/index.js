@@ -1,4 +1,3 @@
-const connectedUsersInfo = require("../model/connectedUsersInfoInstanceModel").getInstance();
 const connectionController = require("../controller/connectionController");
 const authController = require("../controller/authController");
 const inGameController = require("../controller/inGameController");
@@ -13,11 +12,11 @@ function receiveMessage (socket) {
         sendMessageBySocket(socket, "registerCallback", res);
     }));
 
-    socket.on("enter", data => inGameController.enter(socket.id, parseInt(data.roomid), err => {
+    socket.on("enter", () => inGameController.enter(socket.id, (roomid, err) => {
         if(err != null)
             sendMessageBySocket(socket, "enterCallback", { message: "enter failed", err});
         else
-            sendMessageBySocket(socket, "enterCallback", { meesage: "enter complete"});
+            sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid});
     })),
     socket.on("quit", () => inGameController.quit(socket.id));
     
