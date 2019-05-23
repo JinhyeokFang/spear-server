@@ -33,7 +33,7 @@ function receiveMessage (socket) {
 function sendDataMessage (io, time) {
     setInterval(() => {
         for (var user of connectionController.getUsers()) 
-            sendMessageByIO(io, user.id, "message", {user, room: connectedUsersInfo.});
+            sendMessageByIO(io, user.id, "message", {user});
     }, time);
 }
 
