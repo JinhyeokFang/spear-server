@@ -29,6 +29,7 @@ module.exports = (function() {
                     return { err: "userNotFound" };    
             },
             loginUserBySocketId(id, username) {
+                console.log(id, username)
                 _updateUserBySocketId(id, { id, username });
             },
             enterGameRoomBySocketId(id) {
@@ -43,7 +44,6 @@ module.exports = (function() {
                 newData.aniStatus = 0;
                 newData.horseBonesPositions = [];
                 _updateUserBySocketId(id, newData);
-                console.log(id);
                 return { roomid: newData.roomid, err: null };
             },
             quitGameRoomBySocketId(id) {
