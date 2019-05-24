@@ -19,7 +19,7 @@ function receiveMessage (socket) {
             sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid});
     })),
     socket.on("quit", () => inGameController.quit(socket.id));
-    socket.on("gameover", () => inGameController.gameover());
+    socket.on("gameover", () => inGameController.gameover(socket.id));
     
     socket.on("move", data => inGameController.move(data.x, data.y, socket.id));
     socket.on("skill", data => inGameController.skill(data.number, socket.id, () => {
@@ -53,5 +53,5 @@ module.exports = io => {
         connectionController.connect(socket.id);
         receiveMessage(socket);
     });
-    sendDataMessage(io, 100);
+    sendDataMessage(io, 1000);
 };

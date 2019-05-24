@@ -5,6 +5,7 @@ module.exports = (function() {
     
     function init() {
         setInterval(() => _removeRoomAutoByPopMethod(), 1000);
+        setInterval(() => console.log(_roomList), 1000);
         return {
             get userList() {
                 return _connectedUserList;
@@ -124,7 +125,7 @@ module.exports = (function() {
     function _startGame(roomid) {
         if (roomid >= _roomList.length)
             return;
-        if (_roomList[roomid].using && !_roomList[roomid].inGame)
+        if (!_roomList[roomid].using && _roomList[roomid].inGame)
             return;
         _roomList[roomid].inGame = true;
     }
