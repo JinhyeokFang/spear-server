@@ -19,11 +19,14 @@ function receiveMessage (socket) {
             sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid});
     })),
     socket.on("quit", () => inGameController.quit(socket.id));
+    socket.on("gameover", () => inGameController.gameover());
     
     socket.on("move", data => inGameController.move(data.x, data.y, socket.id));
-    socket.on("skill", data => inGameController.skill(data.number, socket.id, result => {
-        console.log(result);
+    socket.on("skill", data => inGameController.skill(data.number, socket.id, () => {
+    
     }));
+    
+
     // socket.on("kill", data => inGameController.kill(data.target, socket.id, res => {
 
     // }))

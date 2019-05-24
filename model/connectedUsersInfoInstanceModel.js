@@ -4,6 +4,7 @@ module.exports = (function() {
     var _roomList = [];
     
     function init() {
+        setInterval(() => _removeRoomAutoByPopMethod(), 1000);
         return {
             get userList() {
                 return _connectedUserList;
@@ -63,6 +64,14 @@ module.exports = (function() {
                 let roomInfo = _roomList[roomid]; 
                 roomInfo.users = _getUsersByRoomid(roomid);
                 return roomInfo;
+            },
+            stopGameByRoomid(roomid) {
+                if (roomid >= _roomList.length || roomid === undefined)
+                    return;
+                let newData = this.getRoomByRoomid(roomid);
+                newData.inGame = false;
+                newData.using = false;
+                _updateRoomByRoomid(roomid, newData);
             }
         };
     }
@@ -76,10 +85,14 @@ module.exports = (function() {
     }
 
     function _addUserIntoRoom() {
-        if (_getUsersByRoomid(_roomList.length - 1).length == 2 || _roomList.length == 0) {
+        if (_roomList.length == 0) {
             _createRoom();
-            if (_roomList.length - 2 >= 0 && _roomList[_roomList.length - 2].using && !_roomList[_roomList.length - 2].inGame)
-                _roomList[_roomList.length - 2].inGame = true;
+            return 0;
+        }
+        if (_getUsersByRoomid(_roomList.length - 1).length == 1) {
+            _startGame(_roomList.length - 1);
+            _createRoom();
+            return _roomList.length - 2;
         }
         return _roomList.length - 1;
     }
@@ -98,15 +111,23 @@ module.exports = (function() {
         });
     }
 
-    // function _removeRoomByPopMethod() {
-    //     if (_roomList.length > 0)
-    //         _roomList.pop();
-    // }
+    function _removeRoomAutoByPopMethod() {
+        if (_roomList.length > 0 && !_roomList[_roomList.length - 1].using)
+            _roomList.pop();
+    }
 
-    // function _updateRoom(roomid, update) {
-    //     if (_roomList.length > roomid)
-    //         _roomList[roomid] = update;
-    // }
+    function _updateRoomByRoomid(roomid, update) {
+        if (_roomList.length > roomid)
+            _roomList[roomid] = update;
+    }
+
+    function _startGame(roomid) {
+        if (roomid >= _roomList.length)
+            return;
+        if (_roomList[roomid].using && !_roomList[roomid].inGame)
+            return;
+        _roomList[roomid].inGame = true;
+    }
 
     return {
         getInstance() {

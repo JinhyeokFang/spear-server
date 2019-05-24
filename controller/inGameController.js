@@ -17,3 +17,7 @@ exports.move = (x, y, id) => {
 exports.skill = (number, id, callback) => {
     callback({number, id});
 };
+
+exports.gameover = id => {
+    connectedUsersInfo.stopGameByRoomid(connectedUsersInfo.getUserBySocketId(id).roomid);
+};
