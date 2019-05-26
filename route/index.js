@@ -28,15 +28,10 @@ function receiveMessage (io, socket) {
     }));
     socket.on("quit", () => inGameController.quit(socket.id));
     socket.on("gameover", () => inGameController.gameover(socket.id));
-    
     socket.on("skill", data => inGameController.skill(data.number, socket.id, () => {
     
     }));
     socket.on("updateUserInfo", data => inGameController.updatePosition(data.x, data.y, data.act));
-
-    // socket.on("kill", data => inGameController.kill(data.target, socket.id, res => {
-
-    // }))
 }
 
 function sendDataMessage (io, time) {
@@ -60,5 +55,5 @@ module.exports = io => {
         connectionController.connect(socket.id);
         receiveMessage(io, socket);
     });
-    sendDataMessage(io, 1000);
+    sendDataMessage(io, 60);
 };

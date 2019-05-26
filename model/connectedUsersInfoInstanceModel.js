@@ -103,9 +103,19 @@ module.exports = (function() {
                 newData.using = false;
                 _updateRoomByRoomid(roomid, newData);
             },
-            getUsersByRoomid(roomid) {
-                if (_roomList.length > roomid)
-                    return _connectedUserList.filter(element => element.roomid == roomid);
+            getOpponentUserBySocketId(id) {
+                if (this.getUserBySocketId(id).roomid == undefined)
+                    return null;
+                if (this._getUsersByRoomid(this.getUserBySocketId(id).roomid).length != 2)
+                    return null;
+        
+                return this._getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id);
+            },
+            getRoomBySocketId(id) {
+                if (this._getUserBySocketId(id).roomid == undefined)
+                    return null;
+            
+                return this.getRoomByRoomid(this._getUserBySocketId(id).roomid);
             }
         };
     }

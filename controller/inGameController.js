@@ -27,18 +27,10 @@ exports.gameover = id => {
     connectedUsersInfo.stopGameByRoomid(connectedUsersInfo.getUserBySocketId(id).roomid);
 };
 
-exports.getOpponent = id => { //사탄: 아 이건 좀 [이 코드는 connectedUserInfoInstanceModel.js에 넣는게 맞는듯 하다]
-    if (connectedUsersInfo.getUserBySocketId(id).roomid == undefined)
-        return null;
-    if (connectedUsersInfo.getUsersByRoomid(connectedUsersInfo.getUserBySocketId(id).roomid).length != 2)
-        return null;
-
-    return connectedUsersInfo.getUsersByRoomid(connectedUsersInfo.getUserBySocketId(id).roomid).find(element => element.id != id);
+exports.getOpponent = id => {
+    connectedUsersInfo.getOpponentUserBySocketId(id);
 };
 
 exports.getRoom = id => {
-    if (connectedUsersInfo.getUserBySocketId(id).roomid == undefined)
-        return null;
-    
-    return connectedUsersInfo.getRoomByRoomid(connectedUsersInfo.getUserBySocketId(id).roomid);
+    connectedUsersInfo.getRoomBySocketId(id);
 };
