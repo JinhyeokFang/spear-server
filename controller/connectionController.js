@@ -4,8 +4,8 @@ exports.connect = id => {
     connectedUsersInfo.createUser(id);
 };
 
-exports.disconnect = id => {
-    connectedUsersInfo.removeUserBySocketId(id);
+exports.disconnect = (id, callback) => {
+    connectedUsersInfo.removeUserBySocketId(id, callback);
 };
 
 exports.getUsers = () => connectedUsersInfo.userList;

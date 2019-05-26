@@ -16,12 +16,21 @@ module.exports = (function() {
             createUser(id) {
                 _connectedUserList.push({id});
             },
-            removeUserBySocketId(id) {
+            removeUserBySocketId(id, callback) {
                 let index = _connectedUserList.findIndex(e => e.id == id);
-                if (index != -1)
+
+                if (index != -1) {
+                    if (_connectedUserList[index].roomid != undefined) {
+                        if (this.getRoomByRoomid(_connectedUserList[index].roomid).inGame) {
+                            callback(this.getUsersByRoomid(_connectedUserList[index].roomid).find(element => element.id != id));
+                        } else {
+                            this.enterCancelBySocketId(id);
+                        }
+                    }
                     _connectedUserList.splice(index, 1);
-                else
-                    return { err: "userNotFound" };    
+                } else {
+                    return { err: "userNotFound" };
+                }
             },
             getUserBySocketId(id) {
                 let user = _connectedUserList.find(e => e.id == id);
@@ -40,8 +49,6 @@ module.exports = (function() {
             },
             enterGameRoomBySocketId(id) {
                 let newData = this.getUserBySocketId(id);
-                if (newData.username != undefined)
-                    return { err: "the user already entered" };
                 if (newData.username == undefined)
                     return { err: "can't enter game room without login" };
                 newData.roomid = _addUserIntoRoom();

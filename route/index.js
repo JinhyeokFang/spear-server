@@ -2,8 +2,10 @@ const connectionController = require("../controller/connectionController");
 const authController = require("../controller/authController");
 const inGameController = require("../controller/inGameController");
 
-function receiveMessage (socket) {
-    socket.on("disconnect", () => connectionController.disconnect(socket.id));
+function receiveMessage (io, socket) {
+    socket.on("disconnect", () => connectionController.disconnect(socket.id, opponentUser => {
+        sendMessageByIO(io, opponentUser.id, "gameover", {result: "the opponent user quit"});
+    }));
 
     socket.on("login", data => authController.login(socket, data, res => {
         sendMessageBySocket(socket, "loginCallback", res);
@@ -56,7 +58,7 @@ module.exports = io => {
     io.set("origins", "*:*");
     io.on("connection", socket => {
         connectionController.connect(socket.id);
-        receiveMessage(socket);
+        receiveMessage(io, socket);
     });
     sendDataMessage(io, 1000);
 };
