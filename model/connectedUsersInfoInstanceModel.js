@@ -5,7 +5,7 @@ module.exports = (function() {
     
     function init() {
         setInterval(() => _removeRoomAutoByPopMethod(), 1000);
-        setInterval(() => console.log(_roomList), 1000);
+        //setInterval(() => console.log(_roomList), 1000);
         return {
             get userList() {
                 return _connectedUserList;
@@ -30,11 +30,18 @@ module.exports = (function() {
                 else
                     return { err: "userNotFound" };    
             },
-            loginUserBySocketId(id, username) {
-                _updateUserBySocketId(id, { id, username });
+            loginUserBySocketId(id, username, nickname) {
+                if (_connectedUserList.find(element => element.id == id) != undefined)
+                    _updateUserBySocketId(id, { id, username, nickname });
+                else if (_connectedUserList.find(element => element.username == username) == undefined)
+                    return { err: "the user already logined" };
+                else
+                    return { err: "the user already logined" };
             },
             enterGameRoomBySocketId(id) {
                 let newData = this.getUserBySocketId(id);
+                if (newData.username != undefined)
+                    return { err: "the user already entered" };
                 if (newData.username == undefined)
                     return { err: "can't enter game room without login" };
                 newData.roomid = _addUserIntoRoom();
@@ -43,19 +50,34 @@ module.exports = (function() {
                 newData.direction = 0;
                 newData.health = 0;
                 newData.aniStatus = 0;
+                newData.act = 0;
                 newData.horseBonesPositions = [];
                 _updateUserBySocketId(id, newData);
                 return { roomid: newData.roomid, err: null };
+            },
+            enterCancelBySocketId(id) {
+                let user = this.getUserBySocketId(id);
+                if (user.roomid == undefined)
+                    return { err: "the user didn't enter" };
+                
+                if (!this.getRoomByRoomid(user.roomid).inGame) {
+                    _roomList[user.roomid].using = false;
+                } else {
+                    return { err: "the game didn't start" };
+                }
+
+                return { err: null };
             },
             quitGameRoomBySocketId(id) {
                 let newData = this.getUserBySocketId(id);
                 newData.roomid = undefined;
                 _updateUserBySocketId(id, newData);
             },
-            moveUserPositionBySocketId(x, y, id) {
+            updateUserInfoBySocketId(x, y, act, id) {
                 let newData = this.getUserBySocketId(id);
                 newData.x = x;
                 newData.y = y;
+                newData.act = act;
                 _updateUserBySocketId(id, newData);
             },
             getRoomByRoomid(roomid) {
@@ -73,6 +95,10 @@ module.exports = (function() {
                 newData.inGame = false;
                 newData.using = false;
                 _updateRoomByRoomid(roomid, newData);
+            },
+            getUsersByRoomid(roomid) {
+                if (_roomList.length > roomid)
+                    return _connectedUserList.filter(element => element.roomid == roomid);
             }
         };
     }

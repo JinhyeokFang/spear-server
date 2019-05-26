@@ -3,9 +3,14 @@ const connectedUsersInfo = require("../model/connectedUsersInfoInstanceModel").g
 
 exports.login = (socket, data, callback) => {
     db.login(data, res => {
-        callback(res);
-        if (res.message != "login failed")
-            connectedUsersInfo.loginUserBySocketId(socket.id, data.username);
+        if (res.message != "login failed") {
+            if (connectedUsersInfo.loginUserBySocketId(socket.id, data.username, data.nickname) == undefined)
+                callback(res);
+            else
+                callback({ message: "login failed", err: "the user already logined" });
+        } else {
+            callback(res);
+        }
     });
 };
 

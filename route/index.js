@@ -18,14 +18,19 @@ function receiveMessage (socket) {
         else
             sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid});
     })),
+    socket.on("enterCancel", () => inGameController.enterCancel(socket.id, err => {
+        if(err != null)
+            sendMessageBySocket(socket, "enterCancelCallback", { message: "enterCancel failed", err});
+        else
+            sendMessageBySocket(socket, "enterCancelCallback", { message: "enterCancel complete"});
+    }));
     socket.on("quit", () => inGameController.quit(socket.id));
     socket.on("gameover", () => inGameController.gameover(socket.id));
     
-    socket.on("move", data => inGameController.move(data.x, data.y, socket.id));
     socket.on("skill", data => inGameController.skill(data.number, socket.id, () => {
     
     }));
-    
+    socket.on("updateUserInfo", data => inGameController.updatePosition(data.x, data.y, data.act));
 
     // socket.on("kill", data => inGameController.kill(data.target, socket.id, res => {
 
@@ -35,7 +40,7 @@ function receiveMessage (socket) {
 function sendDataMessage (io, time) {
     setInterval(() => {
         for (var user of connectionController.getUsers()) 
-            sendMessageByIO(io, user.id, "message", {user, userList: connectionController.getUsers()});
+            sendMessageByIO(io, user.id, "message", {user, opponent: inGameController.getOpponent(user.id), room: inGameController.getRoom(user.id)});
     }, time);
 }
 
