@@ -31,6 +31,9 @@ function receiveMessage (io, socket) {
     socket.on("skill", data => inGameController.skill(data.number, socket.id, () => {
     
     }));
+    socket.on("setSkill", data => inGameController.setSkill(data));
+    socket.on("getSkill", data => inGameController.getSkill(data));
+    
     socket.on("updateUserInfo", data => inGameController.updatePosition(data.x, data.y, data.act));
 }
 

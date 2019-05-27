@@ -3,7 +3,7 @@ module.exports = (function() {
     var _connectedUserList = [];
     var _roomList = [];
     
-    function init() {
+    function _init() {
         setInterval(() => _removeRoomAutoByPopMethod(), 1000);
         //setInterval(() => console.log(_roomList), 1000);
         return {
@@ -176,7 +176,7 @@ module.exports = (function() {
     return {
         getInstance() {
             if (!instance)
-                instance = init();
+                instance = _init();
             return instance;
         }
     };

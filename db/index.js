@@ -40,11 +40,22 @@ exports.register = (data, callback) => {
     });
 };
 
-exports.update = (data, callback) => {
-    userModel.update({username: data.username}, data, (res, err) => {
+exports.getSkill = (data, callback) => {
+    userModel.findOne({username: data.username}, (res, err) => {
         if (err)
-            callback({ message: "update failed", err });
+            callback({ message: "getSkill failed", err });
+        else if (res == null)
+            callback({ message: "getSkill failed", err: "userNotFound"});
         else
-            callback({ message: "update complete" });
+            callback({ message: "getSkill complete", skill1Array: data.skill1Array, skill2Array: data.skill2Array, err: null});
+    });
+};
+
+exports.setSkill = (data, callback) => {
+    userModel.findOneAndUpdate({username: data.username}, {skill1Array: data.skill1Array, skill2Array: data.skill2Array}, err => {
+        if (err)
+            callback({ message: "setSkill failed", err});
+        else
+            callback({ message: "setSkill complete", err: null });
     });
 };
