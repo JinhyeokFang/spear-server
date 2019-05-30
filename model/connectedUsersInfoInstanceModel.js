@@ -106,20 +106,26 @@ module.exports = (function() {
             getOpponentUserBySocketId(id) {
                 if (this.getUserBySocketId(id).roomid == undefined)
                     return null;
-                if (this._getUsersByRoomid(this.getUserBySocketId(id).roomid).length != 2)
+                if (_getUsersByRoomid(this.getUserBySocketId(id).roomid).length != 2)
                     return null;
         
-                return this._getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id);
+                return _getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id);
             },
             getRoomBySocketId(id) {
-                if (this._getUserBySocketId(id).roomid == undefined)
+		if (this.getUserBySocketId(id) == undefined)
+		return null;
+                if (this.getUserBySocketId(id).roomid == undefined)
                     return null;
             
+<<<<<<< HEAD
                 return this.getRoomByRoomid(this._getUserBySocketId(id).roomid);
             }, 
             getUsersByRoomid(roomid) {
                 if (_roomList.length > roomid)
                     return _connectedUserList.filter(element => element.roomid == roomid);
+=======
+                return this.getRoomByRoomid(this.getUserBySocketId(id).roomid);
+>>>>>>> 0fab7bcccc3df0e3bea15a308e84d23426821d0c
             }
         };
     }
