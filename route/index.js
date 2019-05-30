@@ -14,11 +14,15 @@ function receiveMessage (io, socket) {
         sendMessageBySocket(socket, "registerCallback", res);
     }));
 
-    socket.on("enter", () => inGameController.enter(socket.id, (roomid, err) => {
+    socket.on("enter", () => inGameController.enter(socket.id, (roomid, users, err) => {
         if(err != null)
             sendMessageBySocket(socket, "enterCallback", { message: "enter failed", err});
         else
-            sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid});
+            sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid, users});
+
+        if(users.length >= 2) {
+            users.forEach(user => sendMessageByIO(io, user.id, "gamestart"));
+        }
     })),
     socket.on("enterCancel", () => inGameController.enterCancel(socket.id, err => {
         if(err != null)
