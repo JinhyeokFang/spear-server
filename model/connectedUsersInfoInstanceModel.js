@@ -116,6 +116,10 @@ module.exports = (function() {
                     return null;
             
                 return this.getRoomByRoomid(this._getUserBySocketId(id).roomid);
+            }, 
+            getUsersByRoomid(roomid) {
+                if (_roomList.length > roomid)
+                    return _connectedUserList.filter(element => element.roomid == roomid);
             }
         };
     }
