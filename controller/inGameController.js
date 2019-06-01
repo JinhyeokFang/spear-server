@@ -3,7 +3,7 @@ const connectedUsersInfo = require("../model/connectedUsersInfoInstanceModel").g
 
 exports.enter = (id, callback) => {
     let result = connectedUsersInfo.enterGameRoomBySocketId(id);
-    callback(result.roomid, connectedUsersInfo.getUsersByRoomId(result.roomid), result.err);
+    callback(result.roomid, connectedUsersInfo.getUsersByRoomid(result.roomid), result.err);
 };
 
 exports.enterCancel = (id, callback) => {

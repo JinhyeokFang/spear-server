@@ -4,7 +4,8 @@ const inGameController = require("../controller/inGameController");
 
 function receiveMessage (io, socket) {
     socket.on("disconnect", () => connectionController.disconnect(socket.id, opponentUser => {
-        sendMessageByIO(io, opponentUser.id, "gameover", {result: "the opponent user quit"});
+	if(opponentUser != undefined)
+		sendMessageByIO(io, opponentUser.id, "gameover", {result: "the opponent user quit"});
     }));
 
     socket.on("login", data => authController.login(socket, data, res => {
@@ -15,10 +16,14 @@ function receiveMessage (io, socket) {
     }));
 
     socket.on("enter", () => inGameController.enter(socket.id, (roomid, users, err) => {
-        if(err != null)
+        if(err != null) {
             sendMessageBySocket(socket, "enterCallback", { message: "enter failed", err});
-        else
-            sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid, users});
+        } else {
+	    if (users.length >= 2)
+            	sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid, users, startGame: true});
+	    else
+		sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid, users, startGame: false});
+	}
 
         if(users.length >= 2) {
             users.forEach(user => sendMessageByIO(io, user.id, "gamestart"));
