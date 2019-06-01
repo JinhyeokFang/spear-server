@@ -47,3 +47,7 @@ exports.getSkill = (data, callback) => {
         callback(res);
     });
 };
+
+exports.move = (id, x, y) => {
+    connectedUsersInfo.changeUserPositionBySocketId(id, x, y);
+}

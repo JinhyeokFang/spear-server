@@ -112,8 +112,8 @@ module.exports = (function() {
                 return _getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id);
             },
             getRoomBySocketId(id) {
-		if (this.getUserBySocketId(id) == undefined)
-		return null;
+                if (this.getUserBySocketId(id) == undefined)
+                    return null;
                 if (this.getUserBySocketId(id).roomid == undefined)
                     return null;
             
@@ -122,6 +122,12 @@ module.exports = (function() {
             getUsersByRoomid(roomid) {
                 if (_roomList.length > roomid)
                     return _connectedUserList.filter(element => element.roomid == roomid);
+            },
+            changeUserPositionBySocketId(id, x, y) {
+                let newData = this.getUserBySocketId(id);
+                newData.x = x;
+                newData.y = y;
+                _updateUserBySocketId(id, newData);   
             }
         };
     }
