@@ -56,8 +56,8 @@ module.exports = (function() {
                 newData.y = 0;
                 newData.direction = 0;
                 newData.health = 0;
-                newData.aniStatus = 0;
-                newData.act = 0;
+                newData.imageCode = 0;
+                newData.actStatus = 0;
                 newData.horseBonesPositions = [];
                 _updateUserBySocketId(id, newData);
                 return { roomid: newData.roomid, err: null };
@@ -80,11 +80,13 @@ module.exports = (function() {
                 newData.roomid = undefined;
                 _updateUserBySocketId(id, newData);
             },
-            updateUserInfoBySocketId(x, y, act, id) {
+            updateUserInfoBySocketId(x, y, horseBonesPositions, actStatus, imageCode, id) {
                 let newData = this.getUserBySocketId(id);
                 newData.x = x;
                 newData.y = y;
-                newData.act = act;
+                newData.horseBonesPositions = horseBonesPositions;
+                newData.actStatus = actStatus;
+                newData.imageCode = imageCode;
                 _updateUserBySocketId(id, newData);
             },
             getRoomByRoomid(roomid) {
@@ -122,12 +124,6 @@ module.exports = (function() {
             getUsersByRoomid(roomid) {
                 if (_roomList.length > roomid)
                     return _connectedUserList.filter(element => element.roomid == roomid);
-            },
-            changeUserPositionBySocketId(id, x, y) {
-                let newData = this.getUserBySocketId(id);
-                newData.x = x;
-                newData.y = y;
-                _updateUserBySocketId(id, newData);   
             }
         };
     }

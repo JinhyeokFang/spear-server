@@ -19,11 +19,11 @@ function receiveMessage (io, socket) {
         if(err != null) {
             sendMessageBySocket(socket, "enterCallback", { message: "enter failed", err});
         } else {
-	    if (users.length >= 2)
-            	sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid, users, startGame: true});
-	    else
-		sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid, users, startGame: false});
-	}
+            if (users.length >= 2)
+                sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid, users, startGame: true});
+            else
+                sendMessageBySocket(socket, "enterCallback", { message: "enter complete", roomid, users, startGame: false});
+        }
 
         if(users.length >= 2) {
             users.forEach(user => sendMessageByIO(io, user.id, "gamestart"));
@@ -40,11 +40,9 @@ function receiveMessage (io, socket) {
     socket.on("skill", data => inGameController.skill(data.number, socket.id, () => {
     
     }));
-    socket.on("move", data => inGameController.move(socket.id, data.x, data.y));
+    socket.on("update", data => inGameController.update(socket.id, data.x, data.y, data.horseBonesPositions, data.actStatus, data.imageCode));
     socket.on("setSkill", data => inGameController.setSkill(data));
     socket.on("getSkill", data => inGameController.getSkill(data));
-    
-    socket.on("updateUserInfo", data => inGameController.updatePosition(data.x, data.y, data.act));
 }
 
 function sendDataMessage (io, time) {

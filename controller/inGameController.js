@@ -16,10 +16,6 @@ exports.quit = (id, callback) => {
     callback();
 };
 
-exports.updateUserInfo = (x, y, act, id) => {
-    connectedUsersInfo.updateUserInfoBySocketId(x, y, act, id);
-};
-
 exports.skill = (number, id, callback) => {
     callback({number, id});
 };
@@ -48,6 +44,6 @@ exports.getSkill = (data, callback) => {
     });
 };
 
-exports.move = (id, x, y) => {
-    connectedUsersInfo.changeUserPositionBySocketId(id, x, y);
-}
+exports.update = (id, x, y, horseBonesPositions, actStatus, imageCode) => {
+    connectedUsersInfo.updateUserInfoBySocketId(x, y, horseBonesPositions, actStatus, imageCode, id);
+};
