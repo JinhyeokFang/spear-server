@@ -32,3 +32,7 @@ exports.getRoom = id => {
 exports.update = (id, x, y, horseBonesPositions, actStatus, imageCode, actTime, direction) => {
     connectedUsersInfo.updateUserInfoBySocketId(x, y, horseBonesPositions, actStatus, imageCode, actTime, direction, id);
 };
+
+exports.getOpponent = id => {
+    connectedUsersInfo.getOpponentUserBySocketId(id);
+}

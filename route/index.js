@@ -48,7 +48,7 @@ function receiveMessage (io, socket) {
 function sendDataMessage (io, time) {
     setInterval(() => {
         for (var user of connectionController.getUsers()) {
-            sendMessageByIO(io, user.id, "update_player", {user, opponent: inGameController.getOpponent(user.id)});
+            sendMessageByIO(io, user.id, "update_player", {users: inGameController.getUsers(user.id)});
             sendMessageByIO(io, user.id, "update_roomInfo", {room: inGameController.getRoom(user.id)});
         }
     }, time);
