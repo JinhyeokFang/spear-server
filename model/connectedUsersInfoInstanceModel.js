@@ -120,7 +120,7 @@ module.exports = (function() {
                     return null;
                 if (_getUsersByRoomid(this.getUserBySocketId(id).roomid).length != 2)
                     return null;
-                
+                console.log(_getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id));
                 return _getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id);
             },
             getRoomBySocketId(id) {
