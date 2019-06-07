@@ -68,5 +68,5 @@ module.exports = io => {
         connectionController.connect(socket.id);
         receiveMessage(io, socket);
     });
-    sendDataMessage(io, 50);
+    sendDataMessage(io, 20);
 };

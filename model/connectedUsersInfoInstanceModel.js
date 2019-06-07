@@ -41,10 +41,8 @@ module.exports = (function() {
                     return { err: "userNotFound" };  
             },
             loginUserBySocketId(id, username, nickname) {
-                if (_connectedUserList.find(element => element.id == id) != undefined)
+                if (_connectedUserList.find(element => element.id == id) != undefined && _connectedUserList.find(element => element.username == username) == undefined)
                     _updateUserBySocketId(id, { id, username, nickname });
-                else if (_connectedUserList.find(element => element.username == username) == undefined)
-                    return { err: "the user already logined" };
                 else
                     return { err: "the user already logined" };
             },
