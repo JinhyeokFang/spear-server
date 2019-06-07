@@ -116,7 +116,7 @@ module.exports = (function() {
                 if (_getUsersByRoomid(this.getUserBySocketId(id).roomid).length != 2)
                     return null;
         
-                return _getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id);
+                return _getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id) || null;
             },
             getRoomBySocketId(id) {
                 if (this.getUserBySocketId(id) == undefined)
