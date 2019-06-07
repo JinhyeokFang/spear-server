@@ -86,8 +86,7 @@ module.exports = (function() {
             },
             updateUserInfoBySocketId(x, y, horseBonesPositions, actStatus, imageCode, actTime, direction, id) {
                 let newData = this.getUserBySocketId(id);
-                newData.player_pos.x = x;
-                newData.player_pos.y = y;
+                newData.player_pos = {x,y};
                 newData.object = horseBonesPositions;
                 newData.player_action = actStatus;
                 newData.player_image = imageCode;
