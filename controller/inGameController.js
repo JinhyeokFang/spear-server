@@ -1,4 +1,3 @@
-const db = require("../db");
 const connectedUsersInfo = require("../model/connectedUsersInfoInstanceModel").getInstance();
 
 exports.enter = (id, callback) => {
@@ -26,18 +25,6 @@ exports.getOpponent = id => {
 
 exports.getRoom = id => {
     connectedUsersInfo.getRoomBySocketId(id);
-};
-
-exports.setSkill = (data, callback) => {
-    db.setSkill(data, res => {
-        callback(res);
-    });
-};
-
-exports.getSkill = (data, callback) => {
-    db.getSkill(data, res => {
-        callback(res);
-    });
 };
 
 exports.update = (id, x, y, horseBonesPositions, actStatus, imageCode, actTime, direction) => {

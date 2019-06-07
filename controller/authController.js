@@ -19,3 +19,15 @@ exports.register = (socket, data, callback) => {
         callback(res);
     });
 };
+
+exports.setSkill = (data, callback) => {
+    db.setSkill(data, res => {
+        callback(res);
+    });
+};
+
+exports.getSkill = (data, callback) => {
+    db.getSkill(data, res => {
+        callback(res);
+    });
+};
