@@ -115,7 +115,9 @@ module.exports = (function() {
             },
             getOpponentUserBySocketId(id) {
                 if (this.getUserBySocketId(id).roomid == undefined)
-                    return 0;
+                    return null;
+                if (_getUsersByRoomid(this.getUserBySocketId(id).roomid))
+                    return null;
                 if (_getUsersByRoomid(this.getUserBySocketId(id).roomid).length != 2)
                     return null;
                 
