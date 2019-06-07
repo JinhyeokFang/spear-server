@@ -53,14 +53,16 @@ module.exports = (function() {
                 if (newData.username == undefined)
                     return { err: "can't enter game room without login" };
                 newData.roomid = _addUserIntoRoom();
-                newData.x = 0;
-                newData.y = 0;
-                newData.direction = 0;
-                newData.health = 0;
-                newData.imageCode = 0;
-                newData.actStatus = 0;
-                newData.actTime = null;
-                newData.horseBonesPositions = [];
+                newData.player_pos = {
+                    x: 0,
+                    y: 0
+                };
+                newData.player_direction = 0;
+                newData.player_health = 0;
+                newData.player_image = 0;
+                newData.player_action = 0;
+                newData.player_action_time = null;
+                newData.player_direction = [];
                 _updateUserBySocketId(id, newData);
                 return { roomid: newData.roomid, err: null };
             },
@@ -84,13 +86,13 @@ module.exports = (function() {
             },
             updateUserInfoBySocketId(x, y, horseBonesPositions, actStatus, imageCode, actTime, direction, id) {
                 let newData = this.getUserBySocketId(id);
-                newData.x = x;
-                newData.y = y;
-                newData.horseBonesPositions = horseBonesPositions;
-                newData.actStatus = actStatus;
-                newData.imageCode = imageCode;
-                newData.actTime = actTime;
-                newData.direction = direction;
+                newData.player_pos.x = x;
+                newData.player_pos.y = y;
+                newData.object = horseBonesPositions;
+                newData.player_action = actStatus;
+                newData.player_image = imageCode;
+                newData.player_action_time = actTime;
+                newData.player_direction = direction;
                 _updateUserBySocketId(id, newData);
             },
             getRoomByRoomid(roomid) {
