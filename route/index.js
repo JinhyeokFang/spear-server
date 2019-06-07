@@ -37,8 +37,8 @@ function receiveMessage (io, socket) {
     }));
     socket.on("quit", () => inGameController.quit(socket.id));
     socket.on("gameover", () => inGameController.gameover(socket.id));
-    socket.on("skill", data => inGameController.skill(data.number, socket.id, () => {
-    
+    socket.on("skill", data => inGameController.skill(data, socket.id, () => {
+        sendMessageByIO(io, inGameController.getOpponent(socket.id), "skill", data);
     }));
     socket.on("update", data => inGameController.update(socket.id, data.x, data.y, data.horseBonesPositions, data.actStatus, data.imageCode));
     socket.on("setSkill", data => inGameController.setSkill(data));
@@ -48,7 +48,7 @@ function receiveMessage (io, socket) {
 function sendDataMessage (io, time) {
     setInterval(() => {
         for (var user of connectionController.getUsers()) 
-            sendMessageByIO(io, user.id, "message", {user, opponent: inGameController.getOpponent(user.id), room: inGameController.getRoom(user.id)});
+            sendMessageByIO(io, user.id, "update", {user, opponent: inGameController.getOpponent(user.id), room: inGameController.getRoom(user.id)});
     }, time);
 }
 

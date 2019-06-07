@@ -16,10 +16,6 @@ exports.quit = (id, callback) => {
     callback();
 };
 
-exports.skill = (number, id, callback) => {
-    callback({number, id});
-};
-
 exports.gameover = id => {
     connectedUsersInfo.stopGameByRoomid(connectedUsersInfo.getUserBySocketId(id).roomid);
 };
