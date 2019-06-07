@@ -20,9 +20,7 @@ exports.gameover = id => {
 };
 
 exports.getUsers = id => {
-    if (connectedUsersInfo.getUserBySocketId(id).roomid == undefined)
-        return;
-    connectedUsersInfo.getUsersByRoomid(connectedUsersInfo.getUserBySocketId(id).roomid);
+    return connectedUsersInfo.getUsersByRoomid(connectedUsersInfo.getUserBySocketId(id).roomid);
 };
 
 exports.getRoom = id => {
@@ -35,4 +33,4 @@ exports.update = (id, x, y, horseBonesPositions, actStatus, imageCode, actTime, 
 
 exports.getOpponent = id => {
     connectedUsersInfo.getOpponentUserBySocketId(id);
-}
+};
