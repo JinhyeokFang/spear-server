@@ -22,6 +22,7 @@ module.exports = (function() {
                 if (index != -1) {
                     if (_connectedUserList[index].roomid != undefined) {
                         if (this.getRoomByRoomid(_connectedUserList[index].roomid).inGame) {
+                            this.stopGameByRoomid(_connectedUserList[index].roomid);
                             callback(this.getUsersByRoomid(_connectedUserList[index].roomid).find(element => element.id != id));
                         } else {
                             this.enterCancelBySocketId(id);
