@@ -5,7 +5,7 @@ module.exports = (function() {
     
     function _init() {
         setInterval(() => _removeRoomAutoByPopMethod(), 1000);
-        setInterval(() => console.log(_roomList), 1000);
+//        setInterval(() => console.log(_roomList), 1000);
         return {
             get userList() {
                 return _connectedUserList;
@@ -38,7 +38,7 @@ module.exports = (function() {
                 if (user != null)                
                     return user;
                 else
-                    return { err: "userNotFound" };    
+                    return { err: "userNotFound" };  
             },
             loginUserBySocketId(id, username, nickname) {
                 if (_connectedUserList.find(element => element.id == id) != undefined)
@@ -99,6 +99,9 @@ module.exports = (function() {
                     return null;
 
                 let roomInfo = _roomList[roomid]; 
+                if (roomInfo == undefined)
+                    return;
+
                 roomInfo.users = _getUsersByRoomid(roomid);
                 return roomInfo;
             },
@@ -111,12 +114,14 @@ module.exports = (function() {
                 _updateRoomByRoomid(roomid, newData);
             },
             getOpponentUserBySocketId(id) {
+                console.log(this.getUserBySocketId(id), _getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id));
                 if (this.getUserBySocketId(id).roomid == undefined)
                     return null;
                 if (_getUsersByRoomid(this.getUserBySocketId(id).roomid).length != 2)
                     return null;
         
-                return _getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id) || null;
+                
+                return _getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id);
             },
             getRoomBySocketId(id) {
                 if (this.getUserBySocketId(id) == undefined)
