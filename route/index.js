@@ -40,7 +40,7 @@ function receiveMessage (io, socket) {
     socket.on("skill", data => inGameController.skill(data, socket.id, () => {
         sendMessageByIO(io, inGameController.getOpponent(socket.id), "skill", data);
     }));
-    socket.on("update", data => inGameController.update(socket.id, data.x, data.y, data.horseBonesPositions, data.actStatus, data.imageCode));
+    socket.on("playerUpdate", data => inGameController.update(socket.id, data.player_pos.x, data.player_pos.y, data.object, data.player_action, data.player_image, data.player_action_time, data.player_direction));
     socket.on("setSkill", data => inGameController.setSkill(data));
     socket.on("getSkill", data => inGameController.getSkill(data));
 }

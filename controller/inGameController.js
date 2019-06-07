@@ -40,6 +40,6 @@ exports.getSkill = (data, callback) => {
     });
 };
 
-exports.update = (id, x, y, horseBonesPositions, actStatus, imageCode) => {
-    connectedUsersInfo.updateUserInfoBySocketId(x, y, horseBonesPositions, actStatus, imageCode, id);
+exports.update = (id, x, y, horseBonesPositions, actStatus, imageCode, actTime, direction) => {
+    connectedUsersInfo.updateUserInfoBySocketId(x, y, horseBonesPositions, actStatus, imageCode, actTime, direction, id);
 };

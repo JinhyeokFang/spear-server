@@ -58,6 +58,7 @@ module.exports = (function() {
                 newData.health = 0;
                 newData.imageCode = 0;
                 newData.actStatus = 0;
+                newData.actTime = null;
                 newData.horseBonesPositions = [];
                 _updateUserBySocketId(id, newData);
                 return { roomid: newData.roomid, err: null };
@@ -80,13 +81,15 @@ module.exports = (function() {
                 newData.roomid = undefined;
                 _updateUserBySocketId(id, newData);
             },
-            updateUserInfoBySocketId(x, y, horseBonesPositions, actStatus, imageCode, id) {
+            updateUserInfoBySocketId(x, y, horseBonesPositions, actStatus, imageCode, actTime, direction, id) {
                 let newData = this.getUserBySocketId(id);
                 newData.x = x;
                 newData.y = y;
                 newData.horseBonesPositions = horseBonesPositions;
                 newData.actStatus = actStatus;
                 newData.imageCode = imageCode;
+                newData.actTime = actTime;
+                newData.direction = direction;
                 _updateUserBySocketId(id, newData);
             },
             getRoomByRoomid(roomid) {
