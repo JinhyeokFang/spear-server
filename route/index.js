@@ -49,6 +49,7 @@ function sendDataMessage (io, time) {
     setInterval(() => {
         for (var user of connectionController.getUsers()) {
             sendMessageByIO(io, user.id, "update_player", {user, opponent: inGameController.getOpponent(user.id)});
+            console.log(inGameController.getOpponent(user.id));
             sendMessageByIO(io, user.id, "update_roomInfo", {room: inGameController.getRoom(user.id)});
         }
     }, time);
