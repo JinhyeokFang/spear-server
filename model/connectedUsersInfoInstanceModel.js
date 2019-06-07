@@ -159,7 +159,6 @@ module.exports = (function() {
     }
 
     function _getUsersByRoomid(roomid) {
-        console.log(_connectedUserList);
         if (_roomList.length > roomid)
             return _connectedUserList.filter(element => element.roomid == roomid);
     }
