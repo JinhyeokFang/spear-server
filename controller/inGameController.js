@@ -27,8 +27,12 @@ exports.getRoom = id => {
     connectedUsersInfo.getRoomBySocketId(id);
 };
 
-exports.update = (id, x, y, horseBonesPositions, actStatus, imageCode, actTime, direction) => {
-    connectedUsersInfo.updateUserInfoBySocketId(x, y, horseBonesPositions, actStatus, imageCode, actTime, direction, id);
+exports.update = (id, horseBonesPositions, actStatus, imageCode, actTime, direction) => {
+    connectedUsersInfo.updateUserInfoBySocketId(horseBonesPositions, actStatus, imageCode, actTime, direction, id);
+};
+
+exports.updatePosition = (id, x, y) => {
+    connectedUsersInfo.updateUserPositionBySocketId(x, y, id);
 };
 
 exports.getOpponent = id => {

@@ -82,14 +82,18 @@ module.exports = (function() {
                 newData.roomid = undefined;
                 _updateUserBySocketId(id, newData);
             },
-            updateUserInfoBySocketId(x, y, horseBonesPositions, actStatus, imageCode, actTime, direction, id) {
+            updateUserInfoBySocketId(horseBonesPositions, actStatus, imageCode, actTime, direction, id) {
                 let newData = this.getUserBySocketId(id);
-                newData.player_pos = {x,y};
                 newData.object = horseBonesPositions;
                 newData.player_action = actStatus;
                 newData.player_image = imageCode;
                 newData.player_action_time = actTime;
                 newData.player_direction = direction;
+                _updateUserBySocketId(id, newData);
+            },
+            updateUserPositionBySocketId(x, y, id) {
+                let newData = this.getUserBySocketId(id);
+                newData.player_pos = {x,y};
                 _updateUserBySocketId(id, newData);
             },
             getRoomByRoomid(roomid) {
