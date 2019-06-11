@@ -2,8 +2,6 @@ const connectedUsersInfo = require("../model/connectedUsersInfoInstanceModel").g
 
 exports.enter = (id, callback) => {
     let result = connectedUsersInfo.enterGameRoomBySocketId(id);
-    if (result.err)
-        return;
     callback(result.roomid, connectedUsersInfo.getUsersByRoomid(result.roomid), result.err);
 };
 

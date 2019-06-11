@@ -3,6 +3,5 @@ module.exports =  {
 	db: {
 		name: "game"
 	},
-	environment: "dev",
-	time: 20
+	environment: "dev"
 };

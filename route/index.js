@@ -38,7 +38,7 @@ function receiveMessage (io, socket) {
     socket.on("quit", () => inGameController.quit(socket.id));
     socket.on("gameover", () => inGameController.gameover(socket.id));
     socket.on("skill", data => inGameController.skill(data, socket.id, () => {
-        sendMessageByIO(io, inGameController.getOpponent(socket.id), "opponentSkill", data);
+        sendMessageByIO(io, inGameController.getOpponent(socket.id), "skill", data);
     }));
     socket.on("playerUpdate", data => inGameController.update(socket.id, data.object, data.player_action, data.player_image, data.player_action_time, data.player_direction));
     socket.on("playerPositionUpdate", data => inGameController.updatePosition(socket.id, data.player_pos.x, data.player_pos.y));
@@ -63,11 +63,11 @@ function sendMessageBySocket (socket, ...params) {
     socket.emit(...params);
 }
 
-module.exports = (io, time) => {
+module.exports = io => {
     io.set("origins", "*:*");
     io.on("connection", socket => {
         connectionController.connect(socket.id);
         receiveMessage(io, socket);
     });
-    sendDataMessage(io, time);
+    sendDataMessage(io, 20);
 };
