@@ -38,6 +38,10 @@ function receiveMessage (io, socket) {
     socket.on("quit", () => inGameController.quit(socket.id));
     socket.on("gameover", () => inGameController.gameover(socket.id));
     socket.on("skill", data => inGameController.skill(data, socket.id, () => {
+        let newData = data;
+        newData.subject = socket.id;
+        if (data.damage != undefined)
+            inGameController.addDamage(inGameController.getOpponent(socket.id).id, data.damage);
         sendMessageByIO(io, inGameController.getOpponent(socket.id), "skill", data);
     }));
     socket.on("playerUpdate", data => inGameController.update(socket.id, data.object, data.player_action, data.player_image, data.player_action_time, data.player_direction));

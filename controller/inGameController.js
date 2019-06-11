@@ -38,3 +38,7 @@ exports.updatePosition = (id, x, y) => {
 exports.getOpponent = id => {
     connectedUsersInfo.getOpponentUserBySocketId(id);
 };
+
+exports.addDamage = (id, damage) => {
+    connectedUsersInfo.addDamage(id, damage);
+}

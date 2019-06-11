@@ -135,6 +135,11 @@ module.exports = (function() {
             getUsersByRoomid(roomid) {
                 if (_roomList.length > roomid)
                     return _connectedUserList.filter(element => element.roomid == roomid);
+            },
+            addDamage(id, damage) {
+                let newData = this.getUserBySocketId(id);
+                newData.player_health -= damage;
+                this._updateUserBySocketId(id, newData);
             }
         };
     }
