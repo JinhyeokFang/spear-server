@@ -41,10 +41,10 @@ function receiveMessage (io, socket) {
         let newData = data;
         if (inGameController.getUsers(socket.id) == undefined)
             return;
-        newData.subject = inGameController.getUsers(socket.id).username;
         let opponent = inGameController.getUsers(socket.id).find(el => el.id != socket.id);
         if (opponent == undefined)
             return;
+        newData.subject = inGameController.getUsers(socket.id).find(el => el.id == socket.id).username;
         if (data.damage != undefined)
             inGameController.addDamage(opponent.id, data.damage);
         sendMessageByIO(io, opponent.id, "skill", data);
