@@ -44,8 +44,11 @@ function receiveMessage (io, socket) {
             inGameController.addDamage(inGameController.getOpponent(socket.id).id, data.damage);
         sendMessageByIO(io, inGameController.getOpponent(socket.id), "skill", data);
     }));
-    socket.on("playerUpdate", data => inGameController.update(socket.id, data.object, data.player_action, data.player_image, data.player_action_time, data.player_direction));
-    socket.on("playerPositionUpdate", data => inGameController.updatePosition(socket.id, data.player_pos.x, data.player_pos.y));
+    socket.on("playerUpdate", data => inGameController.update(socket.id, data.object, data.player_image, data.player_direction));
+    socket.on("playerFastUpdate", data => {
+        inGameController.updatePosition(socket.id, data.player_pos.x, data.player_pos.y);
+        inGameController.updateAction(socket.id, data.player_action, data.player_action_time);
+    });
     socket.on("setSkill", data => authController.setSkill(data));
     socket.on("getSkill", data => authController.getSkill(data));
 }
