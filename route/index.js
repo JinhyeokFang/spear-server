@@ -39,15 +39,16 @@ function receiveMessage (io, socket) {
     socket.on("gameover", () => inGameController.gameover(socket.id));
     socket.on("skill", data => {
         let newData = data;
-        newData.subject = socket.id;
         if (inGameController.getUsers(socket.id) == undefined)
             return;
+        newData.subject = inGameController.getUsers(socket.id);
         let opponent = inGameController.getUsers(socket.id).find(el => el.id != socket.id);
         if (opponent == undefined)
             return;
         if (data.damage != undefined)
             inGameController.addDamage(opponent.id, data.damage);
         sendMessageByIO(io, opponent.id, "skill", data);
+        sendMessageByIO(io, socket.id, "skill", data);
     });
     socket.on("playerUpdate", data => inGameController.update(socket.id, data.object, data.player_image, data.player_direction));
     socket.on("playerFastUpdate", data => {
