@@ -37,13 +37,13 @@ function receiveMessage (io, socket) {
     }));
     socket.on("quit", () => inGameController.quit(socket.id));
     socket.on("gameover", () => inGameController.gameover(socket.id));
-    socket.on("skill", data => inGameController.skill(data, socket.id, () => {
+    socket.on("skill", data => {
         let newData = data;
         newData.subject = socket.id;
         if (data.damage != undefined)
             inGameController.addDamage(inGameController.getOpponent(socket.id).id, data.damage);
         sendMessageByIO(io, inGameController.getOpponent(socket.id), "skill", data);
-    }));
+    });
     socket.on("playerUpdate", data => inGameController.update(socket.id, data.object, data.player_image, data.player_direction));
     socket.on("playerFastUpdate", data => {
         inGameController.updatePosition(socket.id, data.player_pos.x, data.player_pos.y);
