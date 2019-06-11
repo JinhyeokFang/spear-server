@@ -41,7 +41,7 @@ function receiveMessage (io, socket) {
         let newData = data;
         if (inGameController.getUsers(socket.id) == undefined)
             return;
-        newData.subject = inGameController.getUsers(socket.id);
+        newData.subject = inGameController.getUsers(socket.id).username;
         let opponent = inGameController.getUsers(socket.id).find(el => el.id != socket.id);
         if (opponent == undefined)
             return;
