@@ -143,7 +143,7 @@ module.exports = (function() {
             addDamage(id, damage) {
                 let newData = this.getUserBySocketId(id);
                 newData.player_health -= damage;
-                this._updateUserBySocketId(id, newData);
+                _updateUserBySocketId(id, newData);
             }
         };
     }
