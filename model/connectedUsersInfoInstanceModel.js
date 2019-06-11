@@ -56,7 +56,7 @@ module.exports = (function() {
                     y: 0
                 };
                 newData.player_direction = 0;
-                newData.player_health = 0;
+                newData.player_health = 100;
                 newData.player_image = 0;
                 newData.player_action = 0;
                 newData.player_action_time = null;
