@@ -102,7 +102,7 @@ module.exports = (function() {
 
                 let roomInfo = _roomList[roomid]; 
                 if (roomInfo == undefined)
-                    return;
+                    return null;
 
                 roomInfo.users = _getUsersByRoomid(roomid);
                 return roomInfo;

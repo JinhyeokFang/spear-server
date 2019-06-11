@@ -12,4 +12,4 @@ app.use(logger(config.environment));
 
 db.initialize(config.db.name);
 
-router(socketio.listen(app.listen(config.port)));
+router(socketio.listen(app.listen(config.port)), config.time);
