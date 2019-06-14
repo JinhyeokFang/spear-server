@@ -15,10 +15,6 @@ exports.quit = (id, callback) => {
     callback();
 };
 
-exports.gameover = id => {
-    connectedUsersInfo.stopGameByRoomid(connectedUsersInfo.getUserBySocketId(id).roomid);
-};
-
 exports.getUsers = id => {
     return connectedUsersInfo.getUsersByRoomid(connectedUsersInfo.getUserBySocketId(id).roomid);
 };
@@ -45,4 +41,8 @@ exports.getOpponent = id => {
 
 exports.addDamage = (id, damage) => {
     connectedUsersInfo.addDamage(id, damage);
-}
+};
+
+exports.getGameoverRoom = () => {
+    return connectedUsersInfo.getGameoverRooms();
+};

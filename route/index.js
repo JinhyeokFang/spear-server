@@ -5,7 +5,7 @@ const inGameController = require("../controller/inGameController");
 function receiveMessage (io, socket) {
     socket.on("disconnect", () => connectionController.disconnect(socket.id, opponentUser => {
 	if(opponentUser != undefined)
-		sendMessageByIO(io, opponentUser.id, "gameover", {result: "the opponent user quit"});
+		sendMessageByIO(io, opponentUser.id, "gameover", {result: "the opponent user quit", winner: socket.id});
     }));
 
     socket.on("login", data => authController.login(socket, data, res => {
@@ -36,7 +36,6 @@ function receiveMessage (io, socket) {
             sendMessageBySocket(socket, "enterCancelCallback", { message: "enterCancel complete"});
     }));
     socket.on("quit", () => inGameController.quit(socket.id));
-    socket.on("gameover", () => inGameController.gameover(socket.id));
     socket.on("skill", data => {
         let newData = data;
         if (inGameController.getUsers(socket.id) == undefined)
@@ -68,6 +67,13 @@ function sendDataMessage (io, time) {
     }, time);
 }
 
+function checkGameOver (io, time) {
+    setInterval(() => {inGameController.getGameoverRoom().forEach(el => {
+        sendMessageByIO(io, el.users[0].id, "gameover", el);
+        sendMessageByIO(io, el.users[1].id, "gameover", el);
+    });}, time);
+}
+
 function sendMessageByIO (io, id, ...params) {
     io.to(id).emit(...params);
 }
@@ -83,4 +89,5 @@ module.exports = io => {
         receiveMessage(io, socket);
     });
     sendDataMessage(io, 20);
+    checkGameOver(io, 30);
 };

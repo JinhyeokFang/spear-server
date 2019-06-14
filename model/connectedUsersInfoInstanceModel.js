@@ -139,11 +139,49 @@ module.exports = (function() {
             getUsersByRoomid(roomid) {
                 if (_roomList.length > roomid)
                     return _connectedUserList.filter(element => element.roomid == roomid);
+                
             },
             addDamage(id, damage) {
                 let newData = this.getUserBySocketId(id);
                 newData.player_health -= damage;
                 _updateUserBySocketId(id, newData);
+            },
+            getGameoverRooms() {
+                let newData = [];
+                _roomList.filter(el => el.inGame).forEach(el => {
+                    let users = this.getUsersByRoomid(el.roomid);
+                    if (users == undefined)
+                        return;
+                    if (users < 2)
+                        return;
+                    if (users[0].player_health < 0 && users[1].player_health < 0) {
+                        newData.push({
+                            winner: null,
+                            result: "draw",
+                            room: el,
+                            users
+                        });
+                    } else if (users[0].player_health < 0) {
+                        newData.push({
+                            winner: users[1],
+                            result: this.winner.username + " win",
+                            room: el,
+                            users
+                        });
+                    } else if (users[1].player_health < 0) {
+                        newData.push({
+                            winner: users[0],
+                            result: this.winner.username + " win",
+                            room: el,
+                            users
+                        });
+                    } else {
+                        return;
+                    }
+                    this.stopGameByRoomid(el.roomid);
+                });
+
+                return newData;
             }
         };
     }
@@ -179,7 +217,8 @@ module.exports = (function() {
             inGame: false,
             using: true,
             score: [],
-            time: 300
+            time: 300,
+            roomid: _roomList.length - 1
         });
     }
 
