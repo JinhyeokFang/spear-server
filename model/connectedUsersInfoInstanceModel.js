@@ -150,7 +150,7 @@ module.exports = (function() {
                         return;
                     if (users[0].player_health == undefined)
                         return;
-                    if (users[0].player_health < 0 && users[1].player_health < 0) {
+                    if (users[0].player_health <= 0 && users[1].player_health <= 0) {
                         newData.push({
                             winner: null,
                             result: "draw",
