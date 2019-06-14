@@ -136,6 +136,8 @@ module.exports = (function() {
             addDamage(id, damage) {
                 let newData = this.getUserBySocketId(id);
                 newData.player_health -= damage;
+                if (newData.player_health < 0)
+                    newData.player_health = 0;
                 _updateUserBySocketId(id, newData);
             },
             getGameoverRooms() {
@@ -158,14 +160,14 @@ module.exports = (function() {
                     } else if (users[0].player_health < 0) {
                         newData.push({
                             winner: users[1],
-                            result: this.winner.username + " win",
+                            result: users[1].username + " win",
                             room: el,
                             users
                         });
                     } else if (users[1].player_health < 0) {
                         newData.push({
                             winner: users[0],
-                            result: this.winner.username + " win",
+                            result: users[0].username + " win",
                             room: el,
                             users
                         });
