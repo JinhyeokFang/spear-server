@@ -20,7 +20,7 @@ exports.getUsers = id => {
 };
 
 exports.getRoom = id => {
-    connectedUsersInfo.getRoomBySocketId(id);
+    return connectedUsersInfo.getRoomByRoomid(connectedUsersInfo.getUserBySocketId(id).roomid);
 };
 
 exports.update = (id, horseBonesPositions, imageCode, direction) => {

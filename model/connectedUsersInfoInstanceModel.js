@@ -5,7 +5,7 @@ module.exports = (function() {
     
     function _init() {
         setInterval(() => _removeRoomAutoByPopMethod(), 1000);
-        //setInterval(() => console.log(_roomList), 1000);
+        setInterval(() => console.log(_roomList), 1000);
         return {
             get userList() {
                 return _connectedUserList;
@@ -128,14 +128,6 @@ module.exports = (function() {
                     return null;
                 return _getUsersByRoomid(this.getUserBySocketId(id).roomid).find(element => element.id != id);
             },
-            getRoomBySocketId(id) {
-                if (this.getUserBySocketId(id) == undefined)
-                    return null;
-                if (this.getUserBySocketId(id).roomid == undefined)
-                    return null;
-            
-                return this.getRoomByRoomid(this.getUserBySocketId(id).roomid);
-            }, 
             getUsersByRoomid(roomid) {
                 if (_roomList.length > roomid)
                     return _connectedUserList.filter(element => element.roomid == roomid);
@@ -152,7 +144,9 @@ module.exports = (function() {
                     let users = this.getUsersByRoomid(el.roomid);
                     if (users == undefined)
                         return;
-                    if (users < 2)
+                    if (users.length < 2)
+                        return;
+                    if (users[0].player_health == undefined)
                         return;
                     if (users[0].player_health < 0 && users[1].player_health < 0) {
                         newData.push({
@@ -218,7 +212,7 @@ module.exports = (function() {
             using: true,
             score: [],
             time: 300,
-            roomid: _roomList.length - 1
+            roomid: _roomList.length
         });
     }
 
