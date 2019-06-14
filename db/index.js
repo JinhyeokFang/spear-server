@@ -27,7 +27,7 @@ exports.register = (data, callback) => {
             } else if (response != null) {
                 callback({ message: "register failed", err: "same nickname is already exist"});
             } else if (res == null) {
-                new userModel({username: data.username, password: data.password, nickname: data.nickname, skill1Array: [], skill2Array: []}).save(err => {
+                new userModel({username: data.username, password: data.password, nickname: data.nickname, skill1Array: [4,3,2,1], skill2Array: [1,2,3,4]}).save(err => {
                     if (err)
                         callback({ message: "register failed", err });
                     else
