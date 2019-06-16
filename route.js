@@ -1,21 +1,22 @@
-const connectionController = require("../controller/connectionController");
-const authController = require("../controller/authController");
-const inGameController = require("../controller/inGameController");
+const connectionController = require("./controller/connectionController");
+const authController = require("./controller/authController");
+const inGameController = require("./controller/inGameController");
+const {connect, sendMessageByIO, sendMessageBySocket, receiveMessageBySocket} = require("./modules/socket");
 
 function receiveMessage (io, socket) {
-    socket.on("disconnect", () => connectionController.disconnect(socket.id, opponentUser => {
-	if(opponentUser != undefined)
-		sendMessageByIO(io, opponentUser.id, "gameover", {result: "the opponent user quit", winner: socket.id});
+    receiveMessageBySocket(socket, "disconnect", () => connectionController.disconnect(socket.id, opponentUser => {
+        if(opponentUser != undefined)
+            sendMessageByIO(io, opponentUser.id, "gameover", {result: "the opponent user quit", winner: socket.id});
     }));
 
-    socket.on("login", data => authController.login(socket, data, res => {
+    receiveMessageBySocket(socket, "login", data => authController.login(socket, data, res => {
         sendMessageBySocket(socket, "loginCallback", res);
     }));
-    socket.on("register", data => authController.register(socket, data, res => {
+    receiveMessageBySocket(socket, "register", data => authController.register(socket, data, res => {
         sendMessageBySocket(socket, "registerCallback", res);
     }));
 
-    socket.on("enter", () => inGameController.enter(socket.id, (roomid, users, err) => {
+    receiveMessageBySocket(socket, "enter", () => inGameController.enter(socket.id, (roomid, users, err) => {
         if(err != null) {
             sendMessageBySocket(socket, "enterCallback", { message: "enter failed", err});
         } else {
@@ -29,14 +30,14 @@ function receiveMessage (io, socket) {
             users.forEach(user => sendMessageByIO(io, user.id, "gamestart"));
         }
     })),
-    socket.on("enterCancel", () => inGameController.enterCancel(socket.id, err => {
+    receiveMessageBySocket(socket, "enterCancel", () => inGameController.enterCancel(socket.id, err => {
         if(err != null)
             sendMessageBySocket(socket, "enterCancelCallback", { message: "enterCancel failed", err});
         else
             sendMessageBySocket(socket, "enterCancelCallback", { message: "enterCancel complete"});
     }));
-    socket.on("quit", () => inGameController.quit(socket.id));
-    socket.on("skill", data => {
+    receiveMessageBySocket(socket, "quit", () => inGameController.quit(socket.id));
+    receiveMessageBySocket(socket, "skill", data => {
         let newData = data;
         if (inGameController.getUsers(socket.id) == undefined)
             return;
@@ -49,13 +50,20 @@ function receiveMessage (io, socket) {
         sendMessageByIO(io, opponent.id, "skill", data);
         sendMessageByIO(io, socket.id, "skill", data);
     });
-    socket.on("playerUpdate", data => inGameController.update(socket.id, data.object, data.player_image, data.player_direction));
-    socket.on("playerFastUpdate", data => {
+    receiveMessageBySocket(socket, "playerUpdate", data => inGameController.update(socket.id, data.object, data.player_image, data.player_direction));
+    receiveMessageBySocket(socket, "playerFastUpdate", data => {
         inGameController.updatePosition(socket.id, data.player_pos.x, data.player_pos.y);
         inGameController.updateAction(socket.id, data.player_action, data.player_action_time);
     });
-    socket.on("setSkill", data => authController.setSkill(data));
-    socket.on("getSkill", data => authController.getSkill(data));
+    receiveMessageBySocket(socket, "setSkill", data => authController.setSkill(data));
+    receiveMessageBySocket(socket, "getSkill", data => authController.getSkill(data));
+}
+
+function checkGameOver (io, time) {
+    setInterval(() => {inGameController.getGameoverRoom().forEach(el => {
+        sendMessageByIO(io, el.users[0].id, "gameover", el);
+        sendMessageByIO(io, el.users[1].id, "gameover", el);
+    });}, time);
 }
 
 function sendDataMessage (io, time) {
@@ -67,24 +75,8 @@ function sendDataMessage (io, time) {
     }, time);
 }
 
-function checkGameOver (io, time) {
-    setInterval(() => {inGameController.getGameoverRoom().forEach(el => {
-        sendMessageByIO(io, el.users[0].id, "gameover", el);
-        sendMessageByIO(io, el.users[1].id, "gameover", el);
-    });}, time);
-}
-
-function sendMessageByIO (io, id, ...params) {
-    io.to(id).emit(...params);
-}
-
-function sendMessageBySocket (socket, ...params) {
-    socket.emit(...params);
-}
-
 module.exports = io => {
-    io.set("origins", "*:*");
-    io.on("connection", socket => {
+    connect(io, socket => {
         connectionController.connect(socket.id);
         receiveMessage(io, socket);
     });

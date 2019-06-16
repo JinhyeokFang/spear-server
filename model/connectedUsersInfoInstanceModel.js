@@ -7,12 +7,6 @@ module.exports = (function() {
         setInterval(() => _removeRoomAutoByPopMethod(), 1000);
         setInterval(() => console.log(_roomList), 1000);
         return {
-            get userList() {
-                return _connectedUserList;
-            },
-            get roomList() {
-                return _roomList;
-            },
             createUser(id) {
                 _connectedUserList.push({id});
             },
@@ -21,10 +15,10 @@ module.exports = (function() {
 
                 if (index != -1) {
                     if (_connectedUserList[index].roomid != undefined) {
-			if (this.getRoomByRoomid(_connectedUserList[index].roomid) == undefined) {
-			    this.enterCancelBySocketId(id);
-			    return;
-			}
+                        if (this.getRoomByRoomid(_connectedUserList[index].roomid) == undefined) {
+                            this.enterCancelBySocketId(id);
+                            return;
+                        }
                         if (this.getRoomByRoomid(_connectedUserList[index].roomid).inGame) {
                             this.stopGameByRoomid(_connectedUserList[index].roomid);
                             callback(this.getUsersByRoomid(_connectedUserList[index].roomid).find(element => element.id != id));
@@ -37,12 +31,23 @@ module.exports = (function() {
                     return { err: "userNotFound" };
                 }
             },
-            getUserBySocketId(id) {
-                let user = _connectedUserList.find(e => e.id == id);
-                if (user != null)                
-                    return user;
-                else
-                    return { err: "userNotFound" };  
+            updateUserInfoBySocketId(horseBonesPositions, imageCode, direction, id) {
+                let newData = this.getUserBySocketId(id);
+                newData.object = horseBonesPositions;
+                newData.player_image = imageCode;
+                newData.player_direction = direction;
+                _updateUserBySocketId(id, newData);
+            },
+            updateUserPositionBySocketId(x, y, id) {
+                let newData = this.getUserBySocketId(id);
+                newData.player_pos = {x,y};
+                _updateUserBySocketId(id, newData);
+            },
+            updateUserActionBySocketId(actStatus, actTime, id) {
+                let newData = this.getUserBySocketId(id);
+                newData.player_action = actStatus;
+                newData.player_action_time = actTime;
+                _updateUserBySocketId(id, newData);
             },
             loginUserBySocketId(id, username, nickname) {
                 if (_connectedUserList.find(element => element.id == id) != undefined && _connectedUserList.find(element => element.username == username) == undefined)
@@ -86,23 +91,27 @@ module.exports = (function() {
                 newData.roomid = undefined;
                 _updateUserBySocketId(id, newData);
             },
-            updateUserInfoBySocketId(horseBonesPositions, imageCode, direction, id) {
+            stopGameByRoomid(roomid) {
+                if (roomid >= _roomList.length || roomid === undefined)
+                    return;
+                let newData = this.getRoomByRoomid(roomid);
+                newData.inGame = false;
+                newData.using = false;
+                _updateRoomByRoomid(roomid, newData);
+            },
+            addDamage(id, damage) {
                 let newData = this.getUserBySocketId(id);
-                newData.object = horseBonesPositions;
-                newData.player_image = imageCode;
-                newData.player_direction = direction;
+                newData.player_health -= damage;
+                if (newData.player_health < 0)
+                    newData.player_health = 0;
                 _updateUserBySocketId(id, newData);
             },
-            updateUserPositionBySocketId(x, y, id) {
-                let newData = this.getUserBySocketId(id);
-                newData.player_pos = {x,y};
-                _updateUserBySocketId(id, newData);
-            },
-            updateUserActionBySocketId(actStatus, actTime, id) {
-                let newData = this.getUserBySocketId(id);
-                newData.player_action = actStatus;
-                newData.player_action_time = actTime;
-                _updateUserBySocketId(id, newData);
+            getUserBySocketId(id) {
+                let user = _connectedUserList.find(e => e.id == id);
+                if (user != null)                
+                    return user;
+                else
+                    return { err: "userNotFound" };  
             },
             getRoomByRoomid(roomid) {
                 if (_roomList.length <= roomid) 
@@ -114,14 +123,6 @@ module.exports = (function() {
 
                 roomInfo.users = _getUsersByRoomid(roomid);
                 return roomInfo;
-            },
-            stopGameByRoomid(roomid) {
-                if (roomid >= _roomList.length || roomid === undefined)
-                    return;
-                let newData = this.getRoomByRoomid(roomid);
-                newData.inGame = false;
-                newData.using = false;
-                _updateRoomByRoomid(roomid, newData);
             },
             getOpponentUserBySocketId(id) {
                 if (this.getUserBySocketId(id).roomid == undefined)
@@ -136,13 +137,6 @@ module.exports = (function() {
                 if (_roomList.length > roomid)
                     return _connectedUserList.filter(element => element.roomid == roomid);
                 
-            },
-            addDamage(id, damage) {
-                let newData = this.getUserBySocketId(id);
-                newData.player_health -= damage;
-                if (newData.player_health < 0)
-                    newData.player_health = 0;
-                _updateUserBySocketId(id, newData);
             },
             getGameoverRooms() {
                 let newData = [];
@@ -182,8 +176,29 @@ module.exports = (function() {
                 });
 
                 return newData;
+            },
+            get userList() {
+                return _connectedUserList;
+            },
+            get roomList() {
+                return _roomList;
             }
         };
+    }
+
+    function _createRoom() {
+        _roomList.push({
+            inGame: false,
+            using: true,
+            score: [],
+            time: 300,
+            roomid: _roomList.length
+        });
+    }
+
+    function _removeRoomAutoByPopMethod() {
+        if (_roomList.length > 0 && !_roomList[_roomList.length - 1].using)
+            _roomList.pop();
     }
 
     function _updateUserBySocketId(id, update) {
@@ -207,26 +222,6 @@ module.exports = (function() {
         return _roomList.length - 1;
     }
 
-    function _getUsersByRoomid(roomid) {
-        if (_roomList.length > roomid)
-            return _connectedUserList.filter(element => element.roomid == roomid);
-    }
-
-    function _createRoom() {
-        _roomList.push({
-            inGame: false,
-            using: true,
-            score: [],
-            time: 300,
-            roomid: _roomList.length
-        });
-    }
-
-    function _removeRoomAutoByPopMethod() {
-        if (_roomList.length > 0 && !_roomList[_roomList.length - 1].using)
-            _roomList.pop();
-    }
-
     function _updateRoomByRoomid(roomid, update) {
         if (_roomList.length > roomid)
             _roomList[roomid] = update;
@@ -238,6 +233,11 @@ module.exports = (function() {
         if (!_roomList[roomid].using && _roomList[roomid].inGame)
             return;
         _roomList[roomid].inGame = true;
+    }
+
+    function _getUsersByRoomid(roomid) {
+        if (_roomList.length > roomid)
+            return _connectedUserList.filter(element => element.roomid == roomid);
     }
 
     return {

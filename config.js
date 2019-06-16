@@ -1,7 +1,8 @@
 module.exports =  {
 	port: 8080,
 	db: {
-		name: "game"
+		name: "test"
 	},
-	environment: "dev"
+	environment: "dev",
+	key: "test"
 };

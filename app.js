@@ -10,6 +10,6 @@ const db = require("./db");
 
 app.use(logger(config.environment));
 
-db.initialize(config.db.name);
+db.initialize(config.db);
 
 router(socketio.listen(app.listen(config.port)));
