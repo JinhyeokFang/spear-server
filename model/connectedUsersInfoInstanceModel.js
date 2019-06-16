@@ -21,6 +21,10 @@ module.exports = (function() {
 
                 if (index != -1) {
                     if (_connectedUserList[index].roomid != undefined) {
+			if (this.getRoomByRoomid(_connectedUserList[index].roomid) == undefined) {
+			    this.enterCancelBySocketId(id);
+			    return;
+			}
                         if (this.getRoomByRoomid(_connectedUserList[index].roomid).inGame) {
                             this.stopGameByRoomid(_connectedUserList[index].roomid);
                             callback(this.getUsersByRoomid(_connectedUserList[index].roomid).find(element => element.id != id));
@@ -157,14 +161,14 @@ module.exports = (function() {
                             room: el,
                             users
                         });
-                    } else if (users[0].player_health < 0) {
+                    } else if (users[0].player_health <= 0) {
                         newData.push({
                             winner: users[1],
                             result: users[1].username + " win",
                             room: el,
                             users
                         });
-                    } else if (users[1].player_health < 0) {
+                    } else if (users[1].player_health <= 0) {
                         newData.push({
                             winner: users[0],
                             result: users[0].username + " win",
