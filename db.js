@@ -38,7 +38,7 @@ exports.register = (data, callback) => {
                         if (err)
                             callback({ message: "register failed", err });
                         else
-                            callback({ message: "register complete", result });
+                            callback({ message: "register complete" });
                     });
                 } else {
                     callback({ message: "register failed", err: "same username is already exist" });
