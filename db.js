@@ -16,6 +16,7 @@ exports.login = (data, callback) => {
             } else if (res == null) {
                 callback({ message: "login failed", err: "user not found" });
             } else {
+                console.log(result.nickname, result);
                 crypto.decrypt({nickname: result.nickname}, result => {
                     callback({ message: "login complete", nickname: result.nickname });
                 });
@@ -37,7 +38,7 @@ exports.register = (data, callback) => {
                         if (err)
                             callback({ message: "register failed", err });
                         else
-                            callback({ message: "register complete" });
+                            callback({ message: "register complete", result });
                     });
                 } else {
                     callback({ message: "register failed", err: "same username is already exist" });
