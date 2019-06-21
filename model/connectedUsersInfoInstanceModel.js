@@ -5,7 +5,6 @@ module.exports = (function() {
     
     function _init() {
         setInterval(() => _removeRoomAutoByPopMethod(), 1000);
-        setInterval(() => console.log(_roomList), 1000);
         return {
             createUser(id) {
                 _connectedUserList.push({id});

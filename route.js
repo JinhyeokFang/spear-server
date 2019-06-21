@@ -55,8 +55,8 @@ function receiveMessage (io, socket) {
         inGameController.updatePosition(socket.id, data.player_pos.x, data.player_pos.y);
         inGameController.updateAction(socket.id, data.player_action, data.player_action_time);
     });
-    receiveMessageBySocket(socket, "setSkill", data => authController.setSkill(data));
-    receiveMessageBySocket(socket, "getSkill", data => sendMessageBySocket(socket, "getSkillCallback", { skill1Array: authController.getSkill(data).skill1Array, skill2Array: authController.getSkill(data).skill2Array}));
+    receiveMessageBySocket(socket, "setSkill", data => authController.setSkill(data, res => {}));
+    receiveMessageBySocket(socket, "getSkill", data => authController.getSkill(data, res => sendMessageBySocket(socket, "getSkillCallback", res)));
 }
 
 function checkGameOver (io, time) {

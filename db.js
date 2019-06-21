@@ -16,9 +16,8 @@ exports.login = (data, callback) => {
             } else if (res == null) {
                 callback({ message: "login failed", err: "user not found" });
             } else {
-                console.log(result.nickname, result);
-                crypto.decrypt({nickname: result.nickname}, result => {
-                    callback({ message: "login complete", nickname: result.nickname });
+                crypto.decrypt({nickname: res.nickname}, resul => {
+                    callback({ message: "login complete", nickname: resul.nickname });
                 });
             }
         });
@@ -45,29 +44,30 @@ exports.register = (data, callback) => {
                 }
             });
         });
-    },);
+    });
 };
 
 exports.getSkill = (data, callback) => {
     crypto.encrypt(data, result => {
-        userModel.findOne({username: result.username}, (res, err) => {
+        userModel.findOne({username: result.username}, (err, res) => {
             if (err)
                 callback({ message: "getSkill failed", err });
             else if (res == null)
                 callback({ message: "getSkill failed", err: "userNotFound"});
             else
-                callback({ message: "getSkill complete", skill1Array: res.skill1Array, skill2Array: res.skill2Array, err: null});
+                callback({ message: "getSkill complete", skill1Array: res.skill1Array, skill2Array: res.skill2Array});
         });
     });
 };
 
 exports.setSkill = (data, callback) => {
-    crypto.encrypt(data, result => {
+    crypto.encrypt({username: data.username}, result => {
         userModel.findOneAndUpdate({username: result.username}, {skill1Array: data.skill1Array, skill2Array: data.skill2Array}, err => {
             if (err)
                 callback({ message: "setSkill failed", err});
             else
                 callback({ message: "setSkill complete", err: null });
+	
         });
     });
 };
