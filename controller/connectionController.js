@@ -1,11 +1,12 @@
 const connectedUsersInfo = require("../model/connectedUsersInfoInstanceModel").getInstance();
 
-exports.connect = id => {
-    connectedUsersInfo.createUser(id);
+exports.connect = (req, res) => {
+    connectedUsersInfo.createUser(res.socket.id);
 };
 
-exports.disconnect = (id, callback) => {
-    connectedUsersInfo.removeUserBySocketId(id, callback);
+exports.disconnect = (req, res) => {
+    connectedUsersInfo.removeUserBySocketId(res.socket.id, opponentUser => {
+        if(opponentUser != undefined)
+            res.ioSend(res.io, opponentUser.id, "gameover", {result: "the opponent user quit", winner: res.socket.id});
+    });
 };
-
-exports.getUsers = () => connectedUsersInfo.userList;

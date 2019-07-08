@@ -5,7 +5,10 @@ const userSchema = mongoose.Schema({
     password: String,
     nickname: String,
     skill1Array: Array,
-    skill2Array: Array
+    skill2Array: Array,
+    friendsArray: Array,
+    friendsRequestArray: Array,
+    rate: String
 });
 const userModel = mongoose.model("user", userSchema);
 
