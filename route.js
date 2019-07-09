@@ -17,6 +17,8 @@ function receiveMessage (io, socket) {
     receiveMessageBySocket(socket, "setRate",              requestData => accountController.setRate(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
 
     receiveMessageBySocket(socket, "enter",                requestData => inGameController.enter(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
+    receiveMessageBySocket(socket, "enterCustom",          requestData => inGameController.enterCustom(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
+    receiveMessageBySocket(socket, "enterNewCustom",       requestData => inGameController.enterNewCustom(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
     receiveMessageBySocket(socket, "enterCancel",          requestData => inGameController.enterCancel(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
     receiveMessageBySocket(socket, "quit",                 requestData => inGameController.quit(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
     receiveMessageBySocket(socket, "skill",                requestData => inGameController.skill(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));

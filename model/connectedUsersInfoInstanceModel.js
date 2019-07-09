@@ -72,16 +72,54 @@ module.exports = (function() {
                 _updateUserBySocketId(id, newData);
                 return { roomid: newData.roomid, err: null };
             },
+            enterNewCustomGameRoom(id, password) {
+                let roomid = _createRoom(true, password);
+                let newData = this.getUserBySocketId(id);
+                if (newData.username == undefined)
+                    return { err: "can't enter game room without login" };
+                newData.roomid = roomid;
+                newData.player_pos = {
+                    x: 0,
+                    y: 0
+                };
+                newData.player_direction = 0;
+                newData.player_health = 100;
+                newData.player_image = 0;
+                newData.player_action = 0;
+                newData.player_action_time = null;
+                newData.player_direction = [];
+                _updateUserBySocketId(id, newData);
+                return { roomid, err: null };
+            },
+            enterCustomGameRoom(id, roomid, password) {
+                if (roomid < _roomList.length - 1 || _roomList[roomid].inGame || !_roomList[roomid].custom) 
+                    return { err: "room not found" };
+                if (_roomList[roomid].password == password)
+                    return { err: "password is wrong" };
+
+                let newData = this.getUserBySocketId(id);
+                if (newData.username == undefined)
+                    return { err: "can't enter game room without login" };
+                newData.roomid = roomid;
+                newData.player_pos = {
+                    x: 0,
+                    y: 0
+                };
+                newData.player_direction = 0;
+                newData.player_health = 100;
+                newData.player_image = 0;
+                newData.player_action = 0;
+                newData.player_action_time = null;
+                newData.player_direction = [];
+                _updateUserBySocketId(id, newData);
+                return { roomid, err: null };
+            },
             enterCancelBySocketId(id) {
                 let user = this.getUserBySocketId(id);
                 if (user.roomid == undefined)
                     return { err: "the user didn't enter" };
                 
-                if (!this.getRoomByRoomid(user.roomid).inGame) {
-                    _roomList[user.roomid].using = false;
-                } else {
-                    return { err: "the game didn't start" };
-                }
+                _roomList[user.roomid].using = false;
 
                 return { err: null };
             },
@@ -185,14 +223,18 @@ module.exports = (function() {
         };
     }
 
-    function _createRoom() {
+    function _createRoom(custom, password) {
         _roomList.push({
             inGame: false,
             using: true,
+            custom,
             score: [],
             time: 300,
+            password,
             roomid: _roomList.length
         });
+
+        return _roomList.length - 1;
     }
 
     function _removeRoomAutoByPopMethod() {
@@ -209,16 +251,21 @@ module.exports = (function() {
     }
 
     function _addUserIntoRoom() {
-        if (_roomList.length == 0) {
-            _createRoom();
-            return 0;
+        let roomIndex = _getAvailableRoom();
+        if (_getAvailableRoom() == -1) {
+            _createRoom(false);
+            return roomIndex;
         }
-        if (_getUsersByRoomid(_roomList.length - 1).length == 1) {
-            _startGame(_roomList.length - 1);
-            _createRoom();
-            return _roomList.length - 2;
+        if (_getUsersByRoomid(roomIndex).length == 1) {
+            _startGame(roomIndex);
+            _createRoom(false);
+            return roomIndex;
         }
-        return _roomList.length - 1;
+        return roomIndex;
+    }
+
+    function _getAvailableRoom () {
+        return _roomList.findIndex(room => room.custom == false && room.inGame == false && room.using == true);
     }
 
     function _updateRoomByRoomid(roomid, update) {

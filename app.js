@@ -1,12 +1,9 @@
-const express = require("express");
 const socketio = require("socket.io");
 
 const router = require("./route");
-const config = require("./config");
-
-const app = express();
+const config = require("./config"); 
 const db = require("./db");
 
 db.initialize(config.db);
 
-router(socketio.listen(app.listen(config.port)));
+router(socketio.listen(config.port));

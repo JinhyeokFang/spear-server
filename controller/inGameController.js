@@ -18,6 +18,42 @@ exports.enter = (req, res) => {
     }
 };
 
+exports.enterCustom = (req, res) => {
+    let result = connectedUsersInfo.enterCustomGameRoom(res.socket.id, res.roomid, res.password);
+    let users = connectedUsersInfo.getUsersByRoomid(res.roomid);
+
+    if (result.err != null) {
+        res.socketSend(res.socket, "enterCustomCallback", { message: "enter failed", err: result.err});
+    } else {
+        if (users.length >= 2)
+            res.socketSend(res.socket, "enterCustomCallback", { message: "enter complete", roomid: result.roomid, users, startGame: true});
+        else
+            res.socketSend(res.socket, "enterCustomCallback", { message: "enter complete", roomid: result.roomid, users, startGame: false});
+    }
+
+    if(users.length >= 2) {
+        users.forEach(user => res.ioSend(res.io, user.id, "gamestart"));
+    }
+};
+
+exports.enterNewCustom = (req, res) => {
+    let result = connectedUsersInfo.enterNewCustomGameRoom(res.socket.id, res.password);
+    let users = connectedUsersInfo.getUsersByRoomid(result.roomid);
+
+    if (result.err != null) {
+        res.socketSend(res.socket, "enterNewCustomCallback", { message: "enter failed", err: result.err});
+    } else {
+        if (users.length >= 2)
+            res.socketSend(res.socket, "enterNewCustomCallback", { message: "enter complete", roomid: result.roomid, users, startGame: true});
+        else
+            res.socketSend(res.socket, "enterNewCustomCallback", { message: "enter complete", roomid: result.roomid, users, startGame: false});
+    }
+
+    if(users.length >= 2) {
+        users.forEach(user => res.ioSend(res.io, user.id, "gamestart"));
+    }
+};
+
 exports.enterCancel = (req, res) => {
     let result = connectedUsersInfo.enterCancelBySocketId(res.socket.id);
     if(result.err != null)
