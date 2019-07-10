@@ -5,6 +5,7 @@ module.exports = (function() {
     
     function _init() {
         setInterval(() => _removeRoomAutoByPopMethod(), 1000);
+//	setInterval(() => console.log(_connectedUserList, _roomList), 1000);
         return {
             createUser(id) {
                 _connectedUserList.push({id});
@@ -38,6 +39,7 @@ module.exports = (function() {
                 _updateUserBySocketId(id, newData);
             },
             updateUserPositionBySocketId(x, y, id) {
+console.log(x, y, "!");
                 let newData = this.getUserBySocketId(id);
                 newData.player_pos = {x,y};
                 _updateUserBySocketId(id, newData);
@@ -63,12 +65,12 @@ module.exports = (function() {
                     x: 0,
                     y: 0
                 };
-                newData.player_direction = 0;
+		newData.object = {};
                 newData.player_health = 100;
                 newData.player_image = 0;
                 newData.player_action = 0;
-                newData.player_action_time = null;
-                newData.player_direction = [];
+                newData.player_action_time = 0;
+                newData.player_direction = true;
                 _updateUserBySocketId(id, newData);
                 return { roomid: newData.roomid, err: null };
             },
@@ -82,7 +84,7 @@ module.exports = (function() {
                     x: 0,
                     y: 0
                 };
-                newData.player_direction = 0;
+		newData.object = {};
                 newData.player_health = 100;
                 newData.player_image = 0;
                 newData.player_action = 0;
@@ -105,7 +107,7 @@ module.exports = (function() {
                     x: 0,
                     y: 0
                 };
-                newData.player_direction = 0;
+		newData.object = {};
                 newData.player_health = 100;
                 newData.player_image = 0;
                 newData.player_action = 0;
@@ -118,7 +120,8 @@ module.exports = (function() {
                 let user = this.getUserBySocketId(id);
                 if (user.roomid == undefined)
                     return { err: "the user didn't enter" };
-                
+                if (_roomList[user.roomid] == undefined)
+		    return { err: "room not found"};
                 _roomList[user.roomid].using = false;
 
                 return { err: null };
@@ -238,8 +241,8 @@ module.exports = (function() {
     }
 
     function _removeRoomAutoByPopMethod() {
-        if (_roomList.length > 0 && !_roomList[_roomList.length - 1].using)
-            _roomList.pop();
+     //   if (_roomList.length > 0 && _roomList[_roomList.length - 1].using == false && _roomList[_roomList.length - 1].inGame == false)
+       //     _roomList.pop();
     }
 
     function _updateUserBySocketId(id, update) {
@@ -253,13 +256,10 @@ module.exports = (function() {
     function _addUserIntoRoom() {
         let roomIndex = _getAvailableRoom();
         if (_getAvailableRoom() == -1) {
-            _createRoom(false);
-            return roomIndex;
+            return _createRoom(false);
         }
         if (_getUsersByRoomid(roomIndex).length == 1) {
             _startGame(roomIndex);
-            _createRoom(false);
-            return roomIndex;
         }
         return roomIndex;
     }

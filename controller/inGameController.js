@@ -88,10 +88,12 @@ exports.skill = (req, res) => {
 };
 
 exports.update = (req, res) => {
+	console.log("update");
     connectedUsersInfo.updateUserInfoBySocketId(req.horseBonesPositions, req.imageCode, req.direction, res.socket.id);
 };
 
 exports.fastUpdate = (req, res) => {
+console.log("faupdate");
     connectedUsersInfo.updateUserPositionBySocketId(req.x, req.y, res.socket.id);
     connectedUsersInfo.updateUserActionBySocketId(req.actStatus, req.actTime, res.socket.id);
 };
