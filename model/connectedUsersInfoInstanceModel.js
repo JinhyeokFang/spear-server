@@ -39,7 +39,6 @@ module.exports = (function() {
                 _updateUserBySocketId(id, newData);
             },
             updateUserPositionBySocketId(x, y, id) {
-console.log(x, y, "!");
                 let newData = this.getUserBySocketId(id);
                 newData.player_pos = {x,y};
                 _updateUserBySocketId(id, newData);
@@ -65,7 +64,38 @@ console.log(x, y, "!");
                     x: 0,
                     y: 0
                 };
-		newData.object = {};
+                newData.object = {
+                    horse_head: {
+                        x: 0, y: 0, angle: 0
+                    },
+                    horse_neck: {
+                        x: 0, y: 0, angle: 0
+                    },
+                    horse_body: {
+                        x: 0, y: 0, angle: 0
+                    },
+                    horse_leg_right_front_top: {
+                        x: 0, y: 0, angle: 0
+                    },
+                    horse_leg_right_back_bottom: {
+                        x: 0, y: 0, angle: 0
+                    },
+                    horse_leg_left_front_top: {
+                        x: 0, y: 0, angle: 0
+                    },
+                    horse_leg_left_front_bottom: {
+                        x: 0, y: 0, angle: 0
+                    },
+                    horse_leg_left_back_top: {
+                        x: 0, y: 0, angle: 0
+                    },
+                    horse_leg_left_back_bottom: {
+                        x: 0, y: 0, angle: 0
+                    },
+                    knight: {
+                        x: 0, y: 0, angle: 0
+                    }
+                };
                 newData.player_health = 100;
                 newData.player_image = 0;
                 newData.player_action = 0;

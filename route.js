@@ -22,8 +22,8 @@ function receiveMessage (io, socket) {
     receiveMessageBySocket(socket, "enterCancel",          requestData => inGameController.enterCancel(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
     receiveMessageBySocket(socket, "quit",                 requestData => inGameController.quit(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
     receiveMessageBySocket(socket, "skill",                requestData => inGameController.skill(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
-    receiveMessageBySocket(socket, "playerUpdate",         requestData =>{console.log("!"); inGameController.update(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket});});
-    receiveMessageBySocket(socket, "playerFastUpdate",     requestData =>{console.log("?"); inGameController.fastUpdate(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket});});
+    receiveMessageBySocket(socket, "playerUpdate",         requestData => inGameController.update(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
+    receiveMessageBySocket(socket, "playerFastUpdate",     requestData => inGameController.fastUpdate(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
 }
 
 function sendDataMessage (io, time) {
