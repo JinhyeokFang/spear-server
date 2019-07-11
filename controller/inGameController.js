@@ -88,14 +88,12 @@ exports.skill = (req, res) => {
 };
 
 exports.update = (req, res) => {
-	console.log("update");
-    connectedUsersInfo.updateUserInfoBySocketId(req.horseBonesPositions, req.imageCode, req.direction, res.socket.id);
+    connectedUsersInfo.updateUserInfoBySocketId(req.object, req.player_image, req.player_direction, res.socket.id);
 };
 
 exports.fastUpdate = (req, res) => {
-console.log("faupdate");
-    connectedUsersInfo.updateUserPositionBySocketId(req.x, req.y, res.socket.id);
-    connectedUsersInfo.updateUserActionBySocketId(req.actStatus, req.actTime, res.socket.id);
+    connectedUsersInfo.updateUserPositionBySocketId(req.player_pos.x, req.player_pos.y, res.socket.id);
+    connectedUsersInfo.updateUserActionBySocketId(req.player_action, req.player_action_time, res.socket.id);
 };
 
 exports.sendGameover = res => {

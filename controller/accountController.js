@@ -6,7 +6,7 @@ exports.login = (req, res) => {
     db.login(req, resu => {
         if (resu.message != "login failed") {
             crypto.decrypt({username: req.username}, result => {
-                if (connectedUsersInfo.loginUserBySocketId(res.socket.id, result.username, req.nickname) == undefined)
+                if (connectedUsersInfo.loginUserBySocketId(res.socket.id, result.username, resu.nickname) == undefined)
                     res.socketSend(res.socket, "loginCallback", resu);
                 else
                     res.socketSend(res.socket, "loginCallback", { message: "login failed", err: "the user already logined" });

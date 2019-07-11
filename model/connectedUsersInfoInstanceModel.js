@@ -5,7 +5,7 @@ module.exports = (function() {
     
     function _init() {
         setInterval(() => _removeRoomAutoByPopMethod(), 1000);
-//	setInterval(() => console.log(_connectedUserList, _roomList), 1000);
+	setInterval(() => console.log(_connectedUserList, _roomList), 1000);
         return {
             createUser(id) {
                 _connectedUserList.push({id});
@@ -80,6 +80,12 @@ module.exports = (function() {
                     horse_leg_right_back_bottom: {
                         x: 0, y: 0, angle: 0
                     },
+					horse_leg_right_front_bottom: {
+						x: 0, y: 0, angle: 0
+					},
+					horse_leg_right_back_top: {
+						x: 0, y: 0, angle: 0
+					},
                     horse_leg_left_front_top: {
                         x: 0, y: 0, angle: 0
                     },
@@ -271,8 +277,8 @@ module.exports = (function() {
     }
 
     function _removeRoomAutoByPopMethod() {
-     //   if (_roomList.length > 0 && _roomList[_roomList.length - 1].using == false && _roomList[_roomList.length - 1].inGame == false)
-       //     _roomList.pop();
+        if (_roomList.length > 0 && _roomList[_roomList.length - 1].using == false && _roomList[_roomList.length - 1].inGame == false)
+            _roomList.pop();
     }
 
     function _updateUserBySocketId(id, update) {
