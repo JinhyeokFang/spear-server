@@ -55,52 +55,25 @@ module.exports = (function() {
                 else
                     return { err: "the user already logined" };
             },
-            enterGameRoomBySocketId(id) {
+            enterGameRoomBySocketId(id, isRank) {
                 let newData = this.getUserBySocketId(id);
                 if (newData.username == undefined)
                     return { err: "can't enter game room without login" };
-                newData.roomid = _addUserIntoRoom();
-                newData.player_pos = {
-                    x: 0,
-                    y: 0
-                };
+                newData.roomid = _addUserIntoRoom(isRank);
+                newData.player_pos = {x: 0, y: 0};
                 newData.object = {
-                    horse_head: {
-                        x: 0, y: 0, angle: 0
-                    },
-                    horse_neck: {
-                        x: 0, y: 0, angle: 0
-                    },
-                    horse_body: {
-                        x: 0, y: 0, angle: 0
-                    },
-                    horse_leg_right_front_top: {
-                        x: 0, y: 0, angle: 0
-                    },
-                    horse_leg_right_back_bottom: {
-                        x: 0, y: 0, angle: 0
-                    },
-					horse_leg_right_front_bottom: {
-						x: 0, y: 0, angle: 0
-					},
-					horse_leg_right_back_top: {
-						x: 0, y: 0, angle: 0
-					},
-                    horse_leg_left_front_top: {
-                        x: 0, y: 0, angle: 0
-                    },
-                    horse_leg_left_front_bottom: {
-                        x: 0, y: 0, angle: 0
-                    },
-                    horse_leg_left_back_top: {
-                        x: 0, y: 0, angle: 0
-                    },
-                    horse_leg_left_back_bottom: {
-                        x: 0, y: 0, angle: 0
-                    },
-                    knight: {
-                        x: 0, y: 0, angle: 0
-                    }
+                    horse_head: { x: 0, y: 0, angle: 0 },
+                    horse_neck: { x: 0, y: 0, angle: 0},
+                    horse_body: { x: 0, y: 0, angle: 0 },
+                    horse_leg_right_front_top: { x: 0, y: 0, angle: 0 },
+                    horse_leg_right_back_bottom: { x: 0, y: 0, angle: 0 },
+					horse_leg_right_front_bottom: { x: 0, y: 0, angle: 0 },
+					horse_leg_right_back_top: { x: 0, y: 0, angle: 0},
+                    horse_leg_left_front_top: { x: 0, y: 0, angle: 0},
+                    horse_leg_left_front_bottom: { x: 0, y: 0, angle: 0 },
+                    horse_leg_left_back_top: { x: 0, y: 0, angle: 0 },
+                    horse_leg_left_back_bottom: { x: 0, y: 0, angle: 0 },
+                    knight: { x: 0, y: 0, angle: 0 }
                 };
                 newData.player_health = 100;
                 newData.player_image = 0;
@@ -111,7 +84,7 @@ module.exports = (function() {
                 return { roomid: newData.roomid, err: null };
             },
             enterNewCustomGameRoom(id, password) {
-                let roomid = _createRoom(true, password);
+                let roomid = _createRoom(true, false, password);
                 let newData = this.getUserBySocketId(id);
                 if (newData.username == undefined)
                     return { err: "can't enter game room without login" };
@@ -236,14 +209,16 @@ module.exports = (function() {
                             winner: users[1],
                             result: users[1].username + " win",
                             room: el,
-                            users
+                            users,
+                            isRank: el.isRank
                         });
                     } else if (users[1].player_health <= 0) {
                         newData.push({
                             winner: users[0],
                             result: users[0].username + " win",
                             room: el,
-                            users
+                            users,
+                            isRank: el.isRank
                         });
                     } else {
                         return;
@@ -262,11 +237,12 @@ module.exports = (function() {
         };
     }
 
-    function _createRoom(custom, password) {
+    function _createRoom(custom, isRank, password) {
         _roomList.push({
             inGame: false,
             using: true,
             custom,
+            isRank,
             score: [],
             time: 300,
             password,
@@ -289,10 +265,10 @@ module.exports = (function() {
             return { err: "userNotFound" };    
     }
 
-    function _addUserIntoRoom() {
-        let roomIndex = _getAvailableRoom();
+    function _addUserIntoRoom(isRank) {
+        let roomIndex = _getAvailableRoom(isRank);
         if (_getAvailableRoom() == -1) {
-            return _createRoom(false);
+            return _createRoom(false, isRank);
         }
         if (_getUsersByRoomid(roomIndex).length == 1) {
             _startGame(roomIndex);
@@ -300,7 +276,7 @@ module.exports = (function() {
         return roomIndex;
     }
 
-    function _getAvailableRoom () {
+    function _getAvailableRoom (isRank) {
         return _roomList.findIndex(room => room.custom == false && room.inGame == false && room.using == true);
     }
 

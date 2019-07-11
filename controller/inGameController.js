@@ -1,7 +1,8 @@
 const connectedUsersInfo = require("../model/connectedUsersInfoInstanceModel").getInstance();
+const db = require("../db");
 
 exports.enter = (req, res) => {
-    let result = connectedUsersInfo.enterGameRoomBySocketId(res.socket.id);
+    let result = connectedUsersInfo.enterGameRoomBySocketId(res.socket.id, req.isRank);
     let users = connectedUsersInfo.getUsersByRoomid(result.roomid);
 
     if (result.err != null) {
@@ -100,6 +101,14 @@ exports.sendGameover = res => {
     for (var el of connectedUsersInfo.getGameoverRooms()) {
         res.ioSend(res.io, el.users[0].id, "gameover", el);
         res.ioSend(res.io, el.users[1].id, "gameover", el);
+        if (el.isRank) {
+            db.getRate({username: el.users[0].username}, (err, res) => {
+                db.setRate({username: el.users[0].username, rate: res.rate + 1}, (err, res) => {});
+            });
+            db.getRate({username: el.users[1].username}, (err, res) => {
+                db.setRate({username: el.users[1].username, rate: res.rate + 1}, (err, res) => {});
+            });
+        }
     }
 };
 
