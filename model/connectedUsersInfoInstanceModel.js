@@ -5,7 +5,7 @@ module.exports = (function() {
     
     function _init() {
         setInterval(() => _removeRoomAutoByPopMethod(), 1000);
-	setInterval(() => console.log(_connectedUserList, _roomList), 1000);
+	    setInterval(() => console.log(_connectedUserList, _roomList), 1000);
         return {
             createUser(id) {
                 _connectedUserList.push({id});
@@ -146,6 +146,9 @@ module.exports = (function() {
                 let newData = this.getRoomByRoomid(roomid);
                 newData.inGame = false;
                 newData.using = false;
+                this.getUsersByRoomid(roomid).forEach((el, index) => {
+                    this.userList[index].roomid = null;
+                });
                 _updateRoomByRoomid(roomid, newData);
             },
             addDamage(id, damage) {
