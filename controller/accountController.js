@@ -65,3 +65,9 @@ exports.setRate = (req, res) => {
 
     });
 };
+
+exports.getRate = (req, res) => {
+    db.getRate(req, result => {
+        res.socketSend(res.socket, "getRate", result);
+    });
+};

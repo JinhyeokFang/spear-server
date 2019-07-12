@@ -15,6 +15,7 @@ function receiveMessage (io, socket) {
     receiveMessageBySocket(socket, "acceptFriendRequest",  requestData => accountController.acceptFriendRequest(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
     receiveMessageBySocket(socket, "getFriendsList",       requestData => accountController.getFriendsList(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
     receiveMessageBySocket(socket, "setRate",              requestData => accountController.setRate(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
+    receiveMessageBySocket(socket, "getRate",              requestData => accountController.getRate(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
 
     receiveMessageBySocket(socket, "enter",                requestData => inGameController.enter(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));
     receiveMessageBySocket(socket, "enterCustom",          requestData => inGameController.enterCustom(requestData, {io, ioSend: sendMessageByIO, socket, socketSend: sendMessageBySocket}));

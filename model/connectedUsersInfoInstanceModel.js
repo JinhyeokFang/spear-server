@@ -5,7 +5,7 @@ module.exports = (function() {
     
     function _init() {
         setInterval(() => _removeRoomAutoByPopMethod(), 1000);
-	    setInterval(() => console.log(_connectedUserList, _roomList), 1000);
+        setInterval(() => console.log(_connectedUserList, _roomList), 1000);
         return {
             createUser(id) {
                 _connectedUserList.push({id});
@@ -93,7 +93,7 @@ module.exports = (function() {
                     x: 0,
                     y: 0
                 };
-		newData.object = {};
+                newData.object = {};
                 newData.player_health = 100;
                 newData.player_image = 0;
                 newData.player_action = 0;
@@ -116,7 +116,7 @@ module.exports = (function() {
                     x: 0,
                     y: 0
                 };
-		newData.object = {};
+                newData.object = {};
                 newData.player_health = 100;
                 newData.player_image = 0;
                 newData.player_action = 0;
@@ -130,7 +130,7 @@ module.exports = (function() {
                 if (user.roomid == undefined)
                     return { err: "the user didn't enter" };
                 if (_roomList[user.roomid] == undefined)
-		    return { err: "room not found"};
+                    return { err: "room not found"};
                 _roomList[user.roomid].using = false;
 
                 return { err: null };
