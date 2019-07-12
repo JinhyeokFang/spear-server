@@ -8,14 +8,23 @@ exports.enter = (req, res) => {
     if (result.err != null) {
         res.socketSend(res.socket, "enterCallback", { message: "enter failed", err: result.err});
     } else {
-        if (users.length >= 2)
-            res.socketSend(res.socket, "enterCallback", { message: "enter complete", roomid: result.roomid, users, startGame: true});
-        else
+        if (users.length >= 2) {
+            db.getRate({username: users[0].username}, (err, resu) => {
+                db.getRate({username: users[1].username}, (err, resul) => {
+                    res.socketSend(res.socket, "enterCallback", { message: "enter complete", roomid: result.roomid, users, rate: {one: resu.rate, two: resul.rate}, startGame: true});
+                });
+            });
+        } else {
             res.socketSend(res.socket, "enterCallback", { message: "enter complete", roomid: result.roomid, users, startGame: false});
+        }
     }
 
     if(users.length >= 2) {
-        users.forEach(user => res.ioSend(res.io, user.id, "gamestart"));
+        db.getRate({username: users[0].username}, (err, resu) => {
+            db.getRate({username: users[1].username}, (err, resul) => {
+                users.forEach(user => res.ioSend(res.io, user.id, "gamestart", {rate: {one: resu.rate, two: resul.rate}}));
+            });
+        });
     }
 };
 
@@ -99,15 +108,34 @@ exports.fastUpdate = (req, res) => {
 
 exports.sendGameover = res => {
     for (var el of connectedUsersInfo.getGameoverRooms()) {
-        res.ioSend(res.io, el.users[0].id, "gameover", el);
-        res.ioSend(res.io, el.users[1].id, "gameover", el);
-        if (el.isRank) {
-            db.getRate({username: el.users[0].username}, (err, res) => {
-                db.setRate({username: el.users[0].username, rate: res.rate + 1}, (err, res) => {});
-            });
-            db.getRate({username: el.users[1].username}, (err, res) => {
-                db.setRate({username: el.users[1].username, rate: res.rate + 1}, (err, res) => {});
-            });
+        if (el.isRank && el.winner != null) {
+            if (el.winner == el.users[0]) {
+                db.getRate({username: el.users[0].username}, (err, res) => {
+                    let temp = el;
+                    temp.rate = res.rate >= 15 ? 15 : res.rate + 1;
+                    db.setRate({username: el.users[0].username, rate: res.rate >= 15 ? 15 : res.rate + 1}, (err, res) => {});
+                    res.ioSend(res.io, el.users[0].id, "gameover", temp);
+                });
+                db.getRate({username: el.users[1].username}, (err, res) => {
+                    let temp = el;
+                    temp.rate = res.rate <= 1 ? 1 : res.rate - 1;
+                    db.setRate({username: el.users[1].username, rate: res.rate == 1 ? 1 : res.rate - 1}, (err, res) => {});
+                    res.ioSend(res.io, el.users[1].id, "gameover", temp);
+                });
+            } else {
+                db.getRate({username: el.users[0].username}, (err, res) => {
+                    let temp = el;
+                    temp.rate = res.rate <= 1 ? 1 : res.rate - 1;
+                    db.setRate({username: el.users[0].username, rate: res.rate == 1 ? 1 : res.rate - 1}, (err, res) => {});
+                    res.ioSend(res.io, el.users[0].id, "gameover", temp);
+                });
+                db.getRate({username: el.users[1].username}, (err, res) => {
+                    let temp = el;
+                    temp.rate = res.rate >= 15 ? 15 : res.rate + 1;
+                    db.setRate({username: el.users[1].username, rate: res.rate >= 15 ? 15 : res.rate + 1}, (err, res) => {});
+                    res.ioSend(res.io, el.users[1].id, "gameover", temp);
+                });
+            }
         }
     }
 };
