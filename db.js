@@ -138,7 +138,7 @@ exports.acceptFriendRequest = (data, callback) => {
 };
 
 exports.setRate = (data, callback) => {
-    crypto.encrypt(data, result => {
+    crypto.encrypt({username: data.username}, result => {
         userModel.findOneAndUpdate({username: result.username}, {rate: data.rate}, err => {
             callback({ message: "setRate complete"});
         });
@@ -146,7 +146,7 @@ exports.setRate = (data, callback) => {
 };
 
 exports.getRate = (data, callback) => {
-    crypto.encrypt(data, result => {
+    crypto.encrypt({username: data.username}, result => {
         userModel.findOne({username: result.username}, (err, res) => {
 		if (res == undefined || res == null) {
 			callback({ message: "getRate complete", rate: 200000000});

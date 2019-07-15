@@ -6,7 +6,7 @@ exports.enter = (req, res) => {
     let users = connectedUsersInfo.getUsersByRoomid(result.roomid);
 
 	if (users == undefined) {
-	res.socketSend(res.socket, "enterCallback", { message: "enter failed", err: "something went wrong" });
+	res.socketSend(res.socket, "enterCallback", { message: "enter failed", err: "something went wrong", roomid: result.roomid });
 	return;
 }	
 
@@ -114,8 +114,7 @@ exports.fastUpdate = (req, res) => {
 
 exports.sendGameover = res => {
     for (var el of connectedUsersInfo.getGameoverRooms()) {
-        if (el.isRank && el.winner != null) {
-	console.log(el);
+        if (el.winner != null) {
             if (el.winner.username == el.users[0].username) {
                 db.getRate({username: el.users[0].username}, result => {
                     let temp = 1;
