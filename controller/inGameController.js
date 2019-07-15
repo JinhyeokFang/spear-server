@@ -5,12 +5,18 @@ exports.enter = (req, res) => {
     let result = connectedUsersInfo.enterGameRoomBySocketId(res.socket.id, req.isRank);
     let users = connectedUsersInfo.getUsersByRoomid(result.roomid);
 
+	if (users == undefined) {
+	res.socketSend(res.socket, "enterCallback", { message: "enter failed", err: "something went wrong" });
+	return;
+}	
+
     if (result.err != null) {
         res.socketSend(res.socket, "enterCallback", { message: "enter failed", err: result.err});
     } else {
         if (users.length >= 2) {
-            db.getRate({username: users[0].username}, (err, resu) => {
-                db.getRate({username: users[1].username}, (err, resul) => {
+            db.getRate({username: users[0].username}, resu => {
+                db.getRate({username: users[1].username}, resul => {
+		console.log(resu, resul);
                     res.socketSend(res.socket, "enterCallback", { message: "enter complete", roomid: result.roomid, users, rate: {one: resu.rate, two: resul.rate}, startGame: true});
                 });
             });
@@ -20,8 +26,8 @@ exports.enter = (req, res) => {
     }
 
     if(users.length >= 2) {
-        db.getRate({username: users[0].username}, (err, resu) => {
-            db.getRate({username: users[1].username}, (err, resul) => {
+        db.getRate({username: users[0].username}, resu => {
+            db.getRate({username: users[1].username}, resul => {
                 users.forEach(user => res.ioSend(res.io, user.id, "gamestart", {rate: {one: resu.rate, two: resul.rate}}));
             });
         });
@@ -109,32 +115,33 @@ exports.fastUpdate = (req, res) => {
 exports.sendGameover = res => {
     for (var el of connectedUsersInfo.getGameoverRooms()) {
         if (el.isRank && el.winner != null) {
-            if (el.winner == el.users[0]) {
-                db.getRate({username: el.users[0].username}, (err, res) => {
-                    let temp = el;
-                    temp.rate = res.rate >= 15 ? 15 : res.rate + 1;
-                    db.setRate({username: el.users[0].username, rate: res.rate >= 15 ? 15 : res.rate + 1}, (err, res) => {});
-                    res.ioSend(res.io, el.users[0].id, "gameover", temp);
+	console.log(el);
+            if (el.winner.username == el.users[0].username) {
+                db.getRate({username: el.users[0].username}, result => {
+                    let temp = 1;
+                    temp = result.rate >= 15 ? 15 : result.rate + 1;
+			db.setRate({username: el.users[0].username, rate: temp}, (err, result) => {});
+                    res.ioSend(res.io, el.users[0].id, "gameover", el);
                 });
-                db.getRate({username: el.users[1].username}, (err, res) => {
-                    let temp = el;
-                    temp.rate = res.rate <= 1 ? 1 : res.rate - 1;
-                    db.setRate({username: el.users[1].username, rate: res.rate == 1 ? 1 : res.rate - 1}, (err, res) => {});
-                    res.ioSend(res.io, el.users[1].id, "gameover", temp);
+                db.getRate({username: el.users[1].username}, result => {
+                    let temp = 1;
+                    temp = result.rate <= 1 ? 1 : result.rate - 1;
+			db.setRate({username: el.users[1].username, rate: temp}, (err, result) => {});
+                    res.ioSend(res.io, el.users[1].id, "gameover", el);
                 });
             } else {
-                db.getRate({username: el.users[0].username}, (err, res) => {
-                    let temp = el;
-                    temp.rate = res.rate <= 1 ? 1 : res.rate - 1;
-                    db.setRate({username: el.users[0].username, rate: res.rate == 1 ? 1 : res.rate - 1}, (err, res) => {});
-                    res.ioSend(res.io, el.users[0].id, "gameover", temp);
-                });
-                db.getRate({username: el.users[1].username}, (err, res) => {
-                    let temp = el;
-                    temp.rate = res.rate >= 15 ? 15 : res.rate + 1;
-                    db.setRate({username: el.users[1].username, rate: res.rate >= 15 ? 15 : res.rate + 1}, (err, res) => {});
-                    res.ioSend(res.io, el.users[1].id, "gameover", temp);
-                });
+                db.getRate({username: el.users[0].username}, result => {
+                    let temp = 1;
+			temp = result.rate <= 1 ? 1 : result.rate - 1;
+			db.setRate({username: el.users[0].username, rate: temp}, (err, result) => {});
+                    res.ioSend(res.io, el.users[0].id, "gameover", el);
+		});
+                db.getRate({username: el.users[1].username}, result => {
+                    let temp = 1;
+			temp = result.rate >= 15 ? 15 : result.rate + 1;
+			db.setRate({username: el.users[1].username, rate: temp}, (err, result) => {});
+                    res.ioSend(res.io, el.users[1].id, "gameover", el);
+		    });
             }
         }
     }

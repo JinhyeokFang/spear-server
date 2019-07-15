@@ -33,7 +33,7 @@ exports.register = (data, callback) => {
                 } else if (response != null) {
                     callback({ message: "register failed", err: "same nickname is already exist"});
                 } else if (res == null) {
-                    new userModel({username: result.username, password: result.password, nickname: result.nickname, skill1Array: [4,3,2,1], skill2Array: [1,2,3,4], friendsArray: [], friendsRequestArray: [], rate: "0"}).save(err => {
+                    new userModel({username: result.username, password: result.password, nickname: result.nickname, skill1Array: [4,3,2,1], skill2Array: [1,2,3,4], friendsArray: [], friendsRequestArray: [], rate: 1}).save(err => {
                         if (err)
                             callback({ message: "register failed", err });
                         else
@@ -147,8 +147,13 @@ exports.setRate = (data, callback) => {
 
 exports.getRate = (data, callback) => {
     crypto.encrypt(data, result => {
-        userModel.fintOne({username: result.username}, (res, err) => {
-            callback({ message: "getRate complete", rate: res.rate});
-        });
-    });
+        userModel.findOne({username: result.username}, (err, res) => {
+		if (res == undefined || res == null) {
+			callback({ message: "getRate complete", rate: 200000000});
+			return;
+		} else {
+		callback({ message: "getRate complete", rate: res.rate });
+}        
+});
+	});
 };

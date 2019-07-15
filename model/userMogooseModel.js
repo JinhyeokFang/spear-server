@@ -8,7 +8,7 @@ const userSchema = mongoose.Schema({
     skill2Array: Array,
     friendsArray: Array,
     friendsRequestArray: Array,
-    rate: String
+    rate: Number
 });
 const userModel = mongoose.model("user", userSchema);
 

@@ -30,8 +30,10 @@ function receiveMessage (io, socket) {
 function sendDataMessage (io, time) {
     setInterval(() => {
         inGameController.sendUserData({io, ioSend: sendMessageByIO});
-        inGameController.sendGameover({io, ioSend: sendMessageByIO});
     }, time);
+    setInterval(() => {
+	inGameController.sendGameover({io, ioSend: sendMessageByIO});
+    }, time * 1);
 }
 
 module.exports = io => {
